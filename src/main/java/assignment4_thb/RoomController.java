@@ -1,4 +1,4 @@
-package com.example.assignment4_thb;
+package assignment4_thb.vidmot;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

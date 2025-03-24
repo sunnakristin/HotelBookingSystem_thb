@@ -2,7 +2,6 @@ package assignment4_thb;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -17,8 +16,6 @@ public class BookingController {
     private DatePicker checkOut;
     @FXML
     private DatePicker checkIn;
-    @FXML
-    private Button confirmButton;
     @FXML
     private ChoiceBox<String> cashOrCard;
 
@@ -35,10 +32,8 @@ public class BookingController {
     public void confirm(){
         if(!cashOrCard.getValue().isEmpty()){
             booking.getPayment().setMethod(cashOrCard.getValue());
-            booking.getPayment().process();
             if (checkIn.getValue() != null && checkOut.getValue() != null) {
                 booking.confirm(checkIn.getValue(), checkOut.getValue());
-                confirmButton.setDisable(true);
             } else {
                 System.out.println("Please select both check-in and check-out dates");
             }

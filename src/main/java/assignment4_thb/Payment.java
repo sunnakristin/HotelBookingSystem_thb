@@ -1,9 +1,9 @@
 package assignment4_thb;
 
 public class Payment {
-    private double amount;
+    private final double amount;
     private String method;
-    private int transactionId;
+    private final int transactionId;
 
     public Payment(Booking booking){
         transactionId = booking.getBookingId()+100000000;

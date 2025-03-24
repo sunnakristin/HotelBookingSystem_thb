@@ -9,8 +9,8 @@ public class Booking {
     private static int totalBookings = 0;
     private Date checkIn;
     private Date checkOut;
-    private Room room;
-    private Customer customer;
+    private final Room room;
+    private final Customer customer;
     private Payment payment;
 
     public Booking(Customer customer, Room room){
@@ -32,6 +32,7 @@ public class Booking {
             customer.bookings.add(this);
             sendConfirmation();
             payment = new Payment(this);
+            payment.process();
         } else {
             System.out.println("Unavailable");
         }

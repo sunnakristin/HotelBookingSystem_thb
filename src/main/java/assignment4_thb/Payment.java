@@ -2,29 +2,22 @@ package assignment4_thb;
 
 public class Payment {
     private double amount;
-    private boolean withCard;
+    private String method;
     private int transactionId;
-    private boolean processed = false;
 
     public Payment(Booking booking){
         transactionId = booking.getBookingId()+100000000;
         amount = booking.getRoom().getPrice();
     }
     public void process(){
-        System.out.println(transactionId +"\n"+amount);
-        processed = true;
+        System.out.println(transactionId+"\n"+amount+"\nBy: "+method);
     }
 
-    public void setWithCard(boolean withCard) {
-        this.withCard = withCard;
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     public void refund(){
         System.out.println(transactionId +"\n"+amount+" refunded");
-        processed = false;
-    }
-
-    public boolean isProcessed() {
-        return processed;
     }
 }

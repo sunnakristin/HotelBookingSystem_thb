@@ -32,7 +32,7 @@ public class BookingController {
             this.typeLabel.setText(String.valueOf(booking.getRoom().getPrice()));
             this.priceLabel.setText(booking.getRoom().getType());
             cashOrCard.setItems(FXCollections.observableArrayList("Cash", "Card"));
-            cashOrCard.setValue("Cash");
+            cashOrCard.setValue(null);
         }
     }
     public void confirm(){
@@ -46,7 +46,12 @@ public class BookingController {
         }
     }
     public void pay(){
-        booking.getPayment().process();
-
+        if(cashOrCard.getValue().equals("Card")){
+            booking.getPayment().setWithCard(true);
+            booking.getPayment().process();
+        }else if(cashOrCard.getValue().equals("Cash")){
+            booking.getPayment().setWithCard(false);
+            booking.getPayment().process();
+        }else{System.out.println("Please select a payment method");
     }
 }

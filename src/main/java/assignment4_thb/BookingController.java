@@ -18,8 +18,6 @@ public class BookingController {
     @FXML
     private DatePicker checkIn;
     @FXML
-    private Button payButton;
-    @FXML
     private Button confirmButton;
     @FXML
     private ChoiceBox<String> cashOrCard;
@@ -40,9 +38,7 @@ public class BookingController {
             booking.getPayment().process();
             if (checkIn.getValue() != null && checkOut.getValue() != null) {
                 booking.confirm(checkIn.getValue(), checkOut.getValue());
-                payButton.setDisable(false);
                 confirmButton.setDisable(true);
-                cashOrCard.setDisable(false);
             } else {
                 System.out.println("Please select both check-in and check-out dates");
             }

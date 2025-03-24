@@ -39,9 +39,7 @@ public class Booking {
     public void cancel(){
         room.setAvailability(checkIn, checkOut);
         customer.bookings.remove(this);
-        if (payment.isProcessed()) {
-            payment.refund();
-        }
+        payment.refund();
     }
     public void sendConfirmation(){
         System.out.println(this.bookingId +"\n"+ this.room +"\n"+ this.checkIn +"\n"+ this.checkOut +"\n"+ this.customer);

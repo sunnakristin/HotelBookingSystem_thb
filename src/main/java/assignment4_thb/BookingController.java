@@ -32,26 +32,22 @@ public class BookingController {
             this.typeLabel.setText(String.valueOf(booking.getRoom().getPrice()));
             this.priceLabel.setText(booking.getRoom().getType());
             cashOrCard.setItems(FXCollections.observableArrayList("Cash", "Card"));
-            cashOrCard.setValue(null);
         }
     }
     public void confirm(){
-        if (checkIn.getValue() != null && checkOut.getValue() != null) {
-            booking.confirm(checkIn.getValue(), checkOut.getValue());
-            payButton.setDisable(false);
-            confirmButton.setDisable(true);
-            cashOrCard.setDisable(false);
-        } else {
-            System.out.println("Please select both check-in and check-out dates");
+        if(!cashOrCard.getValue().isEmpty()){
+            booking.getPayment().setMethod(cashOrCard.getValue());
+            booking.getPayment().process();
+            if (checkIn.getValue() != null && checkOut.getValue() != null) {
+                booking.confirm(checkIn.getValue(), checkOut.getValue());
+                payButton.setDisable(false);
+                confirmButton.setDisable(true);
+                cashOrCard.setDisable(false);
+            } else {
+                System.out.println("Please select both check-in and check-out dates");
+            }
+        }else{
+            System.out.println("Please select a payment method");
         }
-    }
-    public void pay(){
-        if(cashOrCard.getValue().equals("Card")){
-            booking.getPayment().setWithCard(true);
-            booking.getPayment().process();
-        }else if(cashOrCard.getValue().equals("Cash")){
-            booking.getPayment().setWithCard(false);
-            booking.getPayment().process();
-        }else{System.out.println("Please select a payment method");
     }
 }

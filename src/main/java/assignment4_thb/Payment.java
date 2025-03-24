@@ -3,12 +3,11 @@ package assignment4_thb;
 public class Payment {
     private double amount;
     private boolean withCard;
-    private String transactionId;
-    private Booking booking;
+    private int transactionId;
     private boolean processed = false;
 
     public Payment(Booking booking){
-        this.booking = booking;
+        transactionId = booking.getBookingId()+100000000;
         amount = booking.getRoom().getPrice();
     }
     public void process(){

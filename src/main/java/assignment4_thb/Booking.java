@@ -25,7 +25,7 @@ public class Booking {
     public void confirm(LocalDate checkIn, LocalDate checkOut){
         Date checkInD = Date.from(checkIn.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         Date checkOutD = Date.from(checkOut.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-        if(room.checkAvailability(checkIn,checkOut) == true){
+        if(room.checkAvailability(checkIn,checkOut)){
             bookingId = 100000000 + totalBookings++;
             this.checkIn = checkInD;
             this.checkOut = checkOutD;
@@ -38,6 +38,7 @@ public class Booking {
     }
     public void cancel(){
         room.setAvailability(checkIn, checkOut);
+        customer.bookings.remove(this);
         if (payment.isProcessed()) {
             payment.refund();
         }
@@ -48,5 +49,9 @@ public class Booking {
 
     public Payment getPayment() {
         return payment;
+    }
+
+    public int getBookingId() {
+        return bookingId;
     }
 }

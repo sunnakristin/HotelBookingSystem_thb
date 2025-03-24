@@ -11,7 +11,6 @@ import java.util.List;
 
 public class RoomController {
 
-
     @FXML
     private ComboBox<String> roomTypeComboBox;
 

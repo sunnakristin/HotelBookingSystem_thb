@@ -14,6 +14,11 @@ public class Payment {
         System.out.println(transactionId +"\n"+amount);
         processed = true;
     }
+
+    public void setWithCard(boolean withCard) {
+        this.withCard = withCard;
+    }
+
     public void refund(){
         System.out.println(transactionId +"\n"+amount+" refunded");
         processed = false;

@@ -13,7 +13,6 @@ public class Room {
     private int numberOfguests;
     private List<Image> roomImages; // Using a list to handle multiple images
 
-    // Þurfum að bæta við hversu margir í hverju herbergi í gagnagrunninn
     public Room(String type, double price, int numberOfguests, boolean availability) {
         this.type = type;
         this.price = price;
@@ -21,6 +20,7 @@ public class Room {
         this.availability = availability;
         this.roomImages = new ArrayList<>(); // Initialize with an empty list
     }
+    // Þurfum að bæta við hversu margir í hverju herbergi í gagnagrunninn
 
     // Getters and Setters
     public String getType() {
@@ -57,6 +57,10 @@ public class Room {
 
     public void addRoomImage(Image image) {
         this.roomImages.add(image);
+    }
+
+    public void setNumberOfguests() {
+        this.numberOfguests = numberOfguests;
     }
 
     public int getNumberOfguests() {

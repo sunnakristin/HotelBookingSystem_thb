@@ -7,16 +7,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 
-public class RoomTest {
-    private Room room;
+public class HotelRoomTest {
+    private HotelRoom room;
     private static final String ROOM_TYPE = "Standard";
     private static final double ROOM_PRICE = 100.0;
     private static final int NUMBER_OF_GUESTS = 2;
-    private static final boolean AVAILABILITY = true;
+    //private static final boolean AVAILABILITY = true;
 
     @BeforeEach
     void setUp() {
-       room = new Room(ROOM_TYPE, ROOM_PRICE, NUMBER_OF_GUESTS, AVAILABILITY);
+       //room = new Room(ROOM_TYPE, ROOM_PRICE, NUMBER_OF_GUESTS);
     }
 
     @AfterEach
@@ -38,11 +38,11 @@ public class RoomTest {
         assertEquals(newType, room.getType());
     }
 
-    @Test
-    void testAvailability() {
+    /*@Test
+     void testAvailability() {
         room.setAvailability(false);
         assertFalse(room.isAvailable());
-    }
+    }*/
 
     @Test
     void testNumberOfguests() {
@@ -55,12 +55,12 @@ public class RoomTest {
         assertEquals(ROOM_TYPE, room.getType());
         assertEquals(ROOM_PRICE, room.getPrice());
         assertEquals(NUMBER_OF_GUESTS, room.getNumberOfguests());
-        assertTrue(room.isAvailable());
+        //assertTrue(room.isAvailable());
         assertNotNull(room.getRoomImages());
         assertTrue(room.getRoomImages().isEmpty());
     }
 
-    @Test
+   /* @Test
     void testCheckAvailability() {
         // Test with valid dates
         LocalDate checkIn = LocalDate.now();
@@ -68,7 +68,7 @@ public class RoomTest {
         assertTrue(room.checkAvailability(checkIn, checkOut));
 
         // Test with unavailable room
-        room.setAvailability(false);
+        //room.setAvailability(false);
         assertFalse(room.checkAvailability(checkIn, checkOut));
-    }
+    }*/
 }

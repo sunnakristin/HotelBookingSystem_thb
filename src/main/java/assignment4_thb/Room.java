@@ -10,15 +10,17 @@ public class Room {
     private String type;
     private double price;
     private boolean availability;
+    private int numberOfguests;
     private List<Image> roomImages; // Using a list to handle multiple images
 
-    // Constructor initializing all fields
-    public Room(String type, double price, boolean availability) {
+    public Room(String type, double price, int numberOfguests, boolean availability) {
         this.type = type;
         this.price = price;
+        this.numberOfguests = numberOfguests;
         this.availability = availability;
         this.roomImages = new ArrayList<>(); // Initialize with an empty list
     }
+    // Þurfum að bæta við hversu margir í hverju herbergi í gagnagrunninn
 
     // Getters and Setters
     public String getType() {
@@ -57,14 +59,17 @@ public class Room {
         this.roomImages.add(image);
     }
 
+    public void setNumberOfguests() {
+        this.numberOfguests = numberOfguests;
+    }
+
+    public int getNumberOfguests() {
+        return numberOfguests;
+    }
+
     // Method to check availability
-    public boolean checkAvailability(LocalDate checkIn, LocalDate checkOut) {
-        // Add logic to determine if the room is available between checkIn and checkOut
+    public boolean checkAvailability(LocalDate checkIn, LocalDate checkOut){
         return availability;
     }
 
-    // Method to update price (could be more complex based on business rules)
-    public void updatePrice(double newPrice) {
-        this.price = newPrice;
-    }
 }

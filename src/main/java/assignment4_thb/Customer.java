@@ -8,6 +8,7 @@ public class Customer {
         bookings.add(booking);
     }
     public void removeBooking(Booking booking){
+        booking.cancel();
         bookings.remove(booking);
     }
 }

@@ -29,17 +29,17 @@ public class Booking {
             bookingId = 100000000 + totalBookings++;
             this.checkIn = checkInD;
             this.checkOut = checkOutD;
-            customer.bookings.add(this);
-            sendConfirmation();
             payment = new Payment(this);
+            sendConfirmation();
+            customer.addBooking(this);
             payment.process();
         } else {
             System.out.println("Unavailable");
         }
     }
     public void cancel(){
-        room.setAvailability(checkIn, checkOut);
-        customer.bookings.remove(this);
+        room.setAvailability(true);
+        customer.removeBooking(this);
         payment.refund();
     }
     public void sendConfirmation(){

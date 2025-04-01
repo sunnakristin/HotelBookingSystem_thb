@@ -6,22 +6,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Room {
+public class HotelRoom {
     private String type;
     private double price;
-    private boolean availability;
     private int numberOfguests;
+    private Hotel hotel;
     private List<Image> roomImages; // Using a list to handle multiple images
 
-    public Room(String type, double price, int numberOfguests, boolean availability) {
+    public HotelRoom(String type, double price, int numberOfguests, Hotel hotel) {
+        this.hotel = hotel;
         this.type = type;
         this.price = price;
         this.numberOfguests = numberOfguests;
-        this.availability = availability;
         this.roomImages = new ArrayList<>(); // Initialize with an empty list
     }
     // Þurfum að bæta við hversu margir í hverju herbergi í gagnagrunninn
-
+    // setjum frekar random tölu á það sem er available
     // Getters and Setters
     public String getType() {
         return type;
@@ -39,12 +39,12 @@ public class Room {
         this.price = price;
     }
 
-    public boolean isAvailable() {
-        return availability;
+    public Hotel getHotel() {
+        return hotel;
     }
 
-    public void setAvailability(boolean availability) {
-        this.availability = availability;
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
 
     public List<Image> getRoomImages() {
@@ -67,9 +67,5 @@ public class Room {
         return numberOfguests;
     }
 
-    // Method to check availability
-    public boolean checkAvailability(LocalDate checkIn, LocalDate checkOut){
-        return availability;
-    }
 
 }

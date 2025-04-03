@@ -24,6 +24,6 @@ public class Payment {
     }
 
     public void refund(){
-        System.out.println("transactionId: " + transactionId +"\nAmount: " + amount + " refunded");
+        System.out.println("transactionId: " + transactionId +"\nAmount: " + amount + " refunded" + "\nCardNr: "+cardNr+ "\nCVC: "+ cvc + "\nExpiryMonth: "+expiryMonth);
     }
 }

@@ -1,20 +1,28 @@
 package assignment4_thb;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Customer {
     private String name;
     private String email;
     private String password;
+    private ArrayList<Booking> bookings;
     //private String preferredLanguage;
     //private String cardInfo;
     //private List<Review> reviews;
 
+    public void addBooking(Booking booking){
+        bookings.add(booking);
+    }
+    public void removeBooking(Booking booking){
+        booking.cancel();
+        bookings.remove(booking);
+    }
     public Customer(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
+        bookings = new ArrayList<>();
         //this.reviews = new ArrayList<>();
     }
 

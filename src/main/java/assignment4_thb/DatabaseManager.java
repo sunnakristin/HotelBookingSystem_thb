@@ -11,15 +11,13 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 
 public class DatabaseManager {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/hotel_db";
-    private static final String USER = "root";
-    private static final String PASS = "root";
+    private static final String DB_URL = "jdbc:sqlite:hotel.db";
 
     public static void initializeDatabase() {
         // Set locale to British English for DD/MM/YYYY date format
         Locale.setDefault(Locale.forLanguageTag("en-GB"));
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
             if (conn != null) {
                 createTables(conn);
                 // Only populate with sample data if tables are empty
@@ -35,29 +33,54 @@ public class DatabaseManager {
     private static void createTables(Connection conn) throws SQLException {
         // Users table
         String createUsersTable = "CREATE TABLE IF NOT EXISTS users (" +
-                "user_id INT AUTO_INCREMENT PRIMARY KEY," +
-                "username VARCHAR(50) NOT NULL UNIQUE," +
-                "password VARCHAR(255) NOT NULL," +
-                "email VARCHAR(100) NOT NULL," +
-                "user_type VARCHAR(20) NOT NULL," + // 'customer' or 'admin'
-                "name VARCHAR(100) NOT NULL," +
+                "user_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "username TEXT NOT NULL UNIQUE," +
+                "password TEXT NOT NULL," +
+                "email TEXT NOT NULL," +
+                "user_type TEXT NOT NULL," + // 'customer' or 'admin'
+                "name TEXT NOT NULL," +
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                 ");";
 
-        // Hotels table (already exists in your schema)
-        // Hotel rooms table (already exists in your schema)
-        // Room images table (already exists in your schema)
+        // Hotels table
+        String createHotelsTable = "CREATE TABLE IF NOT EXISTS hotels (" +
+                "hotel_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "name TEXT NOT NULL," +
+                "location TEXT NOT NULL," +
+                "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                ");";
+
+        // Hotel rooms table
+        String createHotelRoomsTable = "CREATE TABLE IF NOT EXISTS hotel_rooms (" +
+                "room_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "hotel_id INTEGER NOT NULL," +
+                "type TEXT NOT NULL," +
+                "price REAL NOT NULL," +
+                "number_of_guests INTEGER NOT NULL," +
+                "availability INTEGER NOT NULL DEFAULT 1," + // SQLite doesn't have BOOLEAN
+                "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                "FOREIGN KEY (hotel_id) REFERENCES hotels(hotel_id)" +
+                ");";
+
+        // Room images table
+        String createRoomImagesTable = "CREATE TABLE IF NOT EXISTS room_images (" +
+                "image_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "room_id INTEGER NOT NULL," +
+                "image_path TEXT NOT NULL," +
+                "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                "FOREIGN KEY (room_id) REFERENCES hotel_rooms(room_id)" +
+                ");";
 
         // Bookings table
         String createBookingsTable = "CREATE TABLE IF NOT EXISTS bookings (" +
-                "booking_id INT AUTO_INCREMENT PRIMARY KEY," +
-                "room_id INT NOT NULL," +
-                "user_id INT NOT NULL," +
+                "booking_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "room_id INTEGER NOT NULL," +
+                "user_id INTEGER NOT NULL," +
                 "check_in_date DATE NOT NULL," +
                 "check_out_date DATE NOT NULL," +
-                "num_guests INT NOT NULL," +
-                "total_price DECIMAL(10,2) NOT NULL," +
-                "booking_status VARCHAR(20) NOT NULL," + // 'pending', 'confirmed', 'cancelled'
+                "num_guests INTEGER NOT NULL," +
+                "total_price REAL NOT NULL," +
+                "booking_status INTEGER NOT NULL DEFAULT 1," + // 1 = confirmed, 0 = cancelled
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                 "FOREIGN KEY (room_id) REFERENCES hotel_rooms(room_id)," +
                 "FOREIGN KEY (user_id) REFERENCES users(user_id)" +
@@ -65,10 +88,10 @@ public class DatabaseManager {
 
         // Reviews table
         String createReviewsTable = "CREATE TABLE IF NOT EXISTS reviews (" +
-                "review_id INT AUTO_INCREMENT PRIMARY KEY," +
-                "hotel_id INT NOT NULL," +
-                "user_id INT NOT NULL," +
-                "rating INT NOT NULL," + // 1-5
+                "review_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "hotel_id INTEGER NOT NULL," +
+                "user_id INTEGER NOT NULL," +
+                "rating INTEGER NOT NULL," + // 1-5
                 "comment TEXT," +
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                 "FOREIGN KEY (hotel_id) REFERENCES hotels(hotel_id)," +
@@ -77,6 +100,9 @@ public class DatabaseManager {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(createUsersTable);
+            stmt.execute(createHotelsTable);
+            stmt.execute(createHotelRoomsTable);
+            stmt.execute(createRoomImagesTable);
             stmt.execute(createBookingsTable);
             stmt.execute(createReviewsTable);
         }
@@ -101,12 +127,30 @@ public class DatabaseManager {
                 "('admin1', 'password123', 'admin1@example.com', 'admin', 'Hotel Manager')," +
                 "('admin2', 'password123', 'admin2@example.com', 'admin', 'Front Desk');";
 
+        // Sample hotels
+        String insertHotels = "INSERT INTO hotels (name, location) VALUES " +
+                "('Grand Hotel', 'Reykjavik, Iceland')," +
+                "('Mountain View Hotel', 'Akureyri, Iceland')," +
+                "('Ocean Breeze Resort', 'Vik, Iceland');";
+
+        // Sample rooms
+        String insertRooms = "INSERT INTO hotel_rooms (hotel_id, type, price, number_of_guests, availability) VALUES " +
+                "(1, 'Standard', 100.00, 2, 1)," +
+                "(1, 'Deluxe', 200.00, 4, 1)," +
+                "(1, 'Suite', 300.00, 6, 1)," +
+                "(2, 'Standard', 90.00, 2, 1)," +
+                "(2, 'Deluxe', 180.00, 4, 1)," +
+                "(2, 'Suite', 270.00, 6, 1)," +
+                "(3, 'Standard', 120.00, 2, 1)," +
+                "(3, 'Deluxe', 240.00, 4, 1)," +
+                "(3, 'Suite', 360.00, 6, 1);";
+
         // Sample bookings
         String insertBookings = "INSERT INTO bookings (room_id, user_id, check_in_date, check_out_date, num_guests, total_price, booking_status) VALUES "
                 +
-                "(1, 1, '2024-06-01', '2024-06-05', 2, 400.00, 'confirmed')," +
-                "(2, 2, '2024-07-15', '2024-07-20', 4, 1000.00, 'pending')," +
-                "(3, 1, '2024-08-01', '2024-08-03', 6, 900.00, 'confirmed');";
+                "(1, 1, '2024-06-01', '2024-06-05', 2, 400.00, 1)," +
+                "(2, 2, '2024-07-15', '2024-07-20', 4, 1000.00, 0)," +
+                "(3, 1, '2024-08-01', '2024-08-03', 6, 900.00, 1);";
 
         // Sample reviews
         String insertReviews = "INSERT INTO reviews (hotel_id, user_id, rating, comment) VALUES " +
@@ -116,6 +160,8 @@ public class DatabaseManager {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(insertUsers);
+            stmt.execute(insertHotels);
+            stmt.execute(insertRooms);
             stmt.execute(insertBookings);
             stmt.execute(insertReviews);
         }

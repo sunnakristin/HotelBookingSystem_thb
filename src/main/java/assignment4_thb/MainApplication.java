@@ -10,7 +10,7 @@ import java.io.IOException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("customer-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("profileAndSearch-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 300, 300);
         stage.setTitle("Login!");
         stage.setScene(scene);
@@ -18,6 +18,7 @@ public class MainApplication extends Application {
     }
 
     public static void main(String[] args) {
+        DatabaseManager.initializeDatabase();
         launch();
     }
 }

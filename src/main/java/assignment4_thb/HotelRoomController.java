@@ -45,7 +45,7 @@ public class HotelRoomController {
         rooms = new ArrayList<>();
         hotels = new ArrayList<>();
 
-        addSampleData();
+        //addSampleData();
         roomTypeComboBox.getItems().addAll("Standard", "Deluxe", "Suite", "Any"); // example room types
         roomTypeComboBox.setValue("Any");
         checkInDatePicker.setValue(LocalDate.now()); // default to today's date
@@ -132,7 +132,7 @@ public class HotelRoomController {
         alert.showAndWait();
     }
 
-    private void addSampleData() {
+    /*private void addSampleData() {
         Hotel hotel1 = new Hotel("Hótel 1","Reykjavík", null);
         Hotel hotel2 = new Hotel("Hótel 2", "Akureyri,", null);
         Hotel hotel3 = new Hotel("Hótel 3", "Selfoss,", null);
@@ -167,5 +167,5 @@ public class HotelRoomController {
         rooms.add(suiteRoom2);
         rooms.add(suiteRoom3);
         rooms.add(suiteRoom4);
-    }
+    }*/
 }

@@ -12,13 +12,15 @@ public class HotelRoom {
     private int numberOfguests;
     private Hotel hotel;
     private List<Image> roomImages; // Using a list to handle multiple images
+    private Boolean available;
 
-    public HotelRoom(String type, double price, int numberOfguests, Hotel hotel) {
+    public HotelRoom(String type, double price, int numberOfguests, Hotel hotel, Boolean available) {
         this.hotel = hotel;
         this.type = type;
         this.price = price;
         this.numberOfguests = numberOfguests;
         this.roomImages = new ArrayList<>(); // Initialize with an empty list
+        this.available = available;
     }
     // Þurfum að bæta við hversu margir í hverju herbergi í gagnagrunninn
     // setjum frekar random tölu á það sem er available
@@ -65,6 +67,13 @@ public class HotelRoom {
 
     public int getNumberOfguests() {
         return numberOfguests;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 
 

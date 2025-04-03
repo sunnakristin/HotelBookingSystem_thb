@@ -1,6 +1,5 @@
 package assignment4_thb;
 
-import java.util.Date;
 
 public class Payment {
     private final double amount;

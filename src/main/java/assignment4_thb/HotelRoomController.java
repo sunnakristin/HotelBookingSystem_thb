@@ -142,18 +142,18 @@ public class HotelRoomController {
         hotels.add(hotel3);
         hotels.add(hotel4);
 
-        HotelRoom standardRoom1 = new HotelRoom("Standard", 100.0, 1, hotels.get(0));
-        HotelRoom standardRoom2 = new HotelRoom("Standard", 100.0, 2, hotels.get(0));
-        HotelRoom standardRoom3 = new HotelRoom("Standard", 200.0, 3, hotels.get(0));
-        HotelRoom standardRoom4 = new HotelRoom("Standard", 200.0, 4, hotels.get(1));
-        HotelRoom deluxeRoom1 = new HotelRoom("Deluxe", 400.0,2, hotels.get(1));
-        HotelRoom deluxeRoom2 = new HotelRoom("Deluxe", 200.0,4, hotels.get(1));
-        HotelRoom deluxeRoom3 = new HotelRoom("Deluxe", 500.0,5, hotels.get(2));
-        HotelRoom deluxeRoom4 = new HotelRoom("Deluxe", 200.0,1, hotels.get(2));
-        HotelRoom suiteRoom1 = new HotelRoom("Suite", 300.0,1, hotels.get(2));
-        HotelRoom suiteRoom2 = new HotelRoom("Suite", 500.0,3, hotels.get(3));
-        HotelRoom suiteRoom3 = new HotelRoom("Suite", 300.0,2, hotels.get(3));
-        HotelRoom suiteRoom4 = new HotelRoom("Suite", 300.0,3, hotels.get(3));
+        HotelRoom standardRoom1 = new HotelRoom("Standard", 100.0, 1, hotels.get(0),true);
+        HotelRoom standardRoom2 = new HotelRoom("Standard", 100.0, 2, hotels.get(0),true);
+        HotelRoom standardRoom3 = new HotelRoom("Standard", 200.0, 3, hotels.get(0),true);
+        HotelRoom standardRoom4 = new HotelRoom("Standard", 200.0, 4, hotels.get(1),true);
+        HotelRoom deluxeRoom1 = new HotelRoom("Deluxe", 400.0,2, hotels.get(1),true);
+        HotelRoom deluxeRoom2 = new HotelRoom("Deluxe", 200.0,4, hotels.get(1),true);
+        HotelRoom deluxeRoom3 = new HotelRoom("Deluxe", 500.0,5, hotels.get(2),true);
+        HotelRoom deluxeRoom4 = new HotelRoom("Deluxe", 200.0,1, hotels.get(2),true);
+        HotelRoom suiteRoom1 = new HotelRoom("Suite", 300.0,1, hotels.get(2),true);
+        HotelRoom suiteRoom2 = new HotelRoom("Suite", 500.0,3, hotels.get(3),true);
+        HotelRoom suiteRoom3 = new HotelRoom("Suite", 300.0,2, hotels.get(3),true);
+        HotelRoom suiteRoom4 = new HotelRoom("Suite", 300.0,3, hotels.get(3),true);
 
         rooms.add(standardRoom1);
         rooms.add(standardRoom2);

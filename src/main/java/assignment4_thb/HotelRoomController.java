@@ -61,7 +61,7 @@ public class HotelRoomController {
         boolean isNumberOfGuestsEmpty = numberOfGuests.getText().isEmpty();
         int numberOfGuestsInt = 0;
         if (!isNumberOfGuestsEmpty) {
-           numberOfGuestsInt = Integer.parseInt(numberOfGuests.getText());
+            numberOfGuestsInt = Integer.parseInt(numberOfGuests.getText());
         }
 
         LocalDate checkInDate = checkInDatePicker.getValue();
@@ -113,17 +113,16 @@ public class HotelRoomController {
     }
 
     //það sem gerist þegar ýtt á bókunartakkann, mun nota til að far í bókunargluggann
-   private void handleBooking(HotelRoom room) throws IOException {
-       FXMLLoader loader = new FXMLLoader(getClass().getResource("/assignment4_thb/booking-view.fxml"));
-       loader.setController(new BookingController(new Booking(new Customer(), room)));
-       Parent root = loader.load();
+    private void handleBooking(HotelRoom room) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/assignment4_thb/booking-view.fxml"));
+        loader.setController(new BookingController(new Booking(new Customer("aaa", "aaa", "aaa"), room)));        Parent root = loader.load();
 
-       // Create a new Stage (window)
-       Stage stage = new Stage();
-       stage.setTitle("Booking Details");
-       stage.setScene(new Scene(root));
-       stage.showAndWait();
-   }
+        // Create a new Stage (window)
+        Stage stage = new Stage();
+        stage.setTitle("Booking Details");
+        stage.setScene(new Scene(root));
+        stage.showAndWait();
+    }
 
     // Utility method to show alerts
     private void showAlert() {

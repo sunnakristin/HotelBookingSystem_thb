@@ -11,12 +11,27 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
+import javafx.scene.Parent;
+
+
 
 
 public class CustomerController {
 
     @FXML
     public Button fxBackToLoginButton;
+
+    @FXML
+    public PasswordField fxVerifyPasswordField;
+
+    @FXML
+    public Button fxLoginButton;
+
+    @FXML
+    public TextField fxEmailField2;
+
+    @FXML
+    public PasswordField fxPasswordField2;
 
     @FXML
     private Button fxRegisterButton;
@@ -47,16 +62,32 @@ public class CustomerController {
         try {
             Stage registerStage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("register-view.fxml"));
+            Parent root = loader.load();
             Scene scene = new Scene(root);
             registerStage.setScene(scene);
             registerStage.setTitle("Register New Account");
-
-            // Make the new window modal (optional) and set its owner to the current window
             Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             registerStage.initOwner(primaryStage);
             registerStage.initModality(Modality.APPLICATION_MODAL);
+            registerStage.showAndWait();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            // Show the window and wait until it's closed
+    @FXML
+    public void onLogin(ActionEvent actionEvent) {
+        try {
+            Stage registerStage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("login-view.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            registerStage.setScene(scene);
+            registerStage.setTitle("Login to your account");
+            Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            registerStage.initOwner(primaryStage);
+            registerStage.initModality(Modality.APPLICATION_MODAL);
             registerStage.showAndWait();
         }
         catch (IOException e) {
@@ -71,6 +102,40 @@ public class CustomerController {
         String password = fxPasswordField.getText();
         SignUp(name, email, password);
     }
+
+    @FXML
+    public void handleLoginForm(ActionEvent event) {
+        String email = fxEmailField2.getText();
+        String password = fxPasswordField2.getText();
+        Customer customer = signIn(email, password);
+        if (customer != null) {
+            System.out.println("Login Successful!");
+        } else {
+            System.out.println("Invalid credentials.");
+        }
+    }
+
+
+    @FXML
+    public void handleBackToLogin(ActionEvent event) {
+        ((Node) event.getSource()).getScene().getWindow().hide();
+    }
+
+    @FXML
+    public void handleMyBookings(ActionEvent event) {
+        // Your code to handle "My Bookings"
+    }
+
+    @FXML
+    public void handleSearchHotels(ActionEvent event) {
+        // Your code to handle "Search Hotels"
+    }
+
+    @FXML
+    public void handleLogout(ActionEvent event) {
+        // Your code to handle Logout
+    }
+
 
     public void SignUp(String name, String email, String password) {
         Customer customer = new Customer(name, email, password);

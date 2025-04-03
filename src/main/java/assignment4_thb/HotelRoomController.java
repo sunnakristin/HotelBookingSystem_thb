@@ -114,7 +114,8 @@ public class HotelRoomController {
 
     //það sem gerist þegar ýtt á bókunartakkann, mun nota til að far í bókunargluggann
    private void handleBooking(HotelRoom room) throws IOException {
-       FXMLLoader loader = new FXMLLoader(getClass().getResource("/assignment4_thb/hello-view.fxml"));
+       FXMLLoader loader = new FXMLLoader(getClass().getResource("/assignment4_thb/booking-view.fxml"));
+       loader.setController(new BookingController(new Booking(new Customer(), room)));
        Parent root = loader.load();
 
        // Create a new Stage (window)

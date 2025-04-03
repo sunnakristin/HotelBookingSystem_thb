@@ -36,7 +36,7 @@ public class HotelRoomController {
 
     private List<HotelRoom> rooms;
     private List<Hotel> hotels;
-    private Random availability = new Random();
+    private Random showAvailable = new Random(); //notað til að sýna hvaða herbergi eru laus
 
 
     // Initializes the controller class.
@@ -75,7 +75,7 @@ public class HotelRoomController {
 
         for (HotelRoom room : rooms) { // Þarf að birta skilaboð ef ekkert fannst
             VBox roomBox = new VBox(10);
-            if(availability.nextBoolean()) {
+            if(showAvailable.nextBoolean()) {
                 if ((selectedRoomType.equals("Any") || room.getType().equals(selectedRoomType)) && (isNumberOfGuestsEmpty || numberOfGuestsInt == room.getNumberOfguests())){
                     roomBox.getChildren().add(new Label("Type: " + room.getType() + ", price: $" + room.getPrice() + " per night, suitable for " + room.getNumberOfguests() + (room.getNumberOfguests() == 1 ? " person" : " people") + "\n"));
                     Button bookButton = new Button("Book Now");

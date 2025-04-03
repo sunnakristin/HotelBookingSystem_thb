@@ -5,14 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDate;
-
 public class HotelRoomTest {
     private HotelRoom room;
     private static final String ROOM_TYPE = "Standard";
     private static final double ROOM_PRICE = 100.0;
     private static final int NUMBER_OF_GUESTS = 2;
-    //private static final boolean AVAILABILITY = true;
+    private static final boolean AVAILABILITY = true;
 
     @BeforeEach
     void setUp() {
@@ -38,11 +36,11 @@ public class HotelRoomTest {
         assertEquals(newType, room.getType());
     }
 
-    /*@Test
+    @Test
      void testAvailability() {
         room.setAvailability(false);
-        assertFalse(room.isAvailable());
-    }*/
+        assertFalse(room.getAvailability());
+    }
 
     @Test
     void testNumberOfguests() {

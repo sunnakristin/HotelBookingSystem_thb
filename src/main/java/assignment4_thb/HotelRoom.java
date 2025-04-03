@@ -2,7 +2,6 @@ package assignment4_thb;
 
 import javafx.scene.image.Image;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,15 +11,15 @@ public class HotelRoom {
     private int numberOfguests;
     private Hotel hotel;
     private List<Image> roomImages; // Using a list to handle multiple images
-    private Boolean available;
+    private boolean availability;
 
-    public HotelRoom(String type, double price, int numberOfguests, Hotel hotel, Boolean available) {
+    public HotelRoom(String type, double price, int numberOfguests, Hotel hotel, boolean available) {
         this.hotel = hotel;
         this.type = type;
         this.price = price;
         this.numberOfguests = numberOfguests;
         this.roomImages = new ArrayList<>(); // Initialize with an empty list
-        this.available = available;
+        this.availability = available;
     }
     // Þurfum að bæta við hversu margir í hverju herbergi í gagnagrunninn
     // setjum frekar random tölu á það sem er available
@@ -69,11 +68,12 @@ public class HotelRoom {
         return numberOfguests;
     }
 
-    public Boolean getAvailable() {
-        return available;
+    public boolean getAvailability() {
+        return availability;
     }
-    public void setAvailable(Boolean available) {
-        this.available = available;
+
+    public void setAvailability(boolean availability) {
+        this.availability = availability;
     }
 
 

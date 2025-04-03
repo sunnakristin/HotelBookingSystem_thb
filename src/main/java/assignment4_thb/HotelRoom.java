@@ -75,6 +75,4 @@ public class HotelRoom {
     public void setAvailability(boolean availability) {
         this.availability = availability;
     }
-
-
 }

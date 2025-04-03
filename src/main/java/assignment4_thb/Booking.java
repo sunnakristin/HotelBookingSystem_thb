@@ -20,6 +20,7 @@ public class Booking {
 
     public void confirm(){
         if(room.getAvailability()){
+            room.setAvailability(false);
             sendConfirmation();
             customer.addBooking(this);
             payment.process();

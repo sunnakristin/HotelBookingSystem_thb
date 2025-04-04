@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomViewController {
+public class SearchController {
     @FXML private TableView<Hotel> hotelTable;
     @FXML private TableColumn<Hotel, String> nameColumn;
     @FXML private TableColumn<Hotel, String> locationColumn;
@@ -149,8 +149,9 @@ public class RoomViewController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/assignment4_thb/booking-view.fxml"));
         Parent bookingView = loader.load();
         BookingController controller = loader.getController();
-        Booking booking = new Booking(currentCustomer,room); // Búm til nýja bókun, hér þarf að tengja það saman
+        Booking booking = new Booking(currentCustomer, selectedHotel, room); // Búm til nýja bókun, hér þarf að tengja það saman
         controller.setBooking(booking);
+        controller.initialize();
 
         Scene scene = new Scene(bookingView);
         Stage stage = new Stage();

@@ -6,10 +6,13 @@ public class Booking {
     private final HotelRoom room;
     private final Customer customer;
     private Payment payment;
+    private Hotel hotel;
 
-    public Booking(Customer customer, HotelRoom room){
+
+    public Booking(Customer customer, Hotel hotel, HotelRoom room){
         this.customer = customer;
         this.room = room;
+        this.hotel = hotel;
         bookingId = 100000000 + totalBookings++;
         payment = new Payment(this);
     }
@@ -18,7 +21,7 @@ public class Booking {
         return room;
     }
 
-    public void confirm(){
+    public void confirmBooking(){
         if(room.getAvailability()){
             room.setAvailability(false);
             sendConfirmation();
@@ -43,5 +46,9 @@ public class Booking {
 
     public int getBookingId() {
         return bookingId;
+    }
+
+    public String getHotelName() {
+        return hotel.getName();
     }
 }

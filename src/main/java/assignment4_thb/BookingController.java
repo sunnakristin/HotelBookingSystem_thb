@@ -4,8 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import java.text.MessageFormat;
-
 public class BookingController {
     @FXML private Label hotelLabel;
     @FXML private Label typeLabel;
@@ -15,6 +13,8 @@ public class BookingController {
     @FXML private TextField cvc;
     @FXML private TextField expiryMonth;
     @FXML private TextField expiryYear;
+    @FXML private Button backButton;
+    @FXML private Label paymentInfo;
 
     private Booking booking;
 
@@ -25,6 +25,7 @@ public class BookingController {
     public void initialize() {
         if (booking != null) {
             confirmButton.setOnAction(e -> confirm());
+            backButton.setOnAction(e -> back());
             hotelLabel.setText(booking.getHotelName());
             typeLabel.setText(booking.getRoom().getType());
             priceLabel.setText(String.format("%.2f $", booking.getRoom().getPrice()));
@@ -43,7 +44,7 @@ public class BookingController {
         return cvc.getText().matches("\\d{3}");
     }
 
-    private boolean validExpiryDate() {
+    private boolean validExpiryMonth() {
         String month = expiryMonth.getText();
         String year = expiryYear.getText();
 
@@ -63,22 +64,32 @@ public class BookingController {
         int currentYear = java.time.LocalDate.now().getYear();
         int currentMonth = java.time.LocalDate.now().getMonthValue();
 
-        if (yearNum < currentYear || (yearNum == currentYear && monthNum < currentMonth)) {
-            return false;
-        }
-        return true;
+        return !(yearNum < currentYear || (yearNum == currentYear && monthNum < currentMonth));
     }
 
     @FXML
     public void confirm() {
-        if (validCardNr() && validCVC() && validExpiryDate()) {
-            String expiryDate = expiryMonth.getText() + "/" + expiryYear.getText();
-            booking.getPayment().setCardInfo(cardNr.getText(), cvc.getText(), expiryDate);
-            booking.confirmBooking();
-            Stage stage = (Stage) confirmButton.getScene().getWindow();
-            stage.close();
+        if (validCardNr() && validCVC() && validExpiryMonth()) {
+            if (booking.getRoom().getAvailability()){
+                String expiryDate = expiryMonth.getText() + "/" + expiryYear.getText();
+                booking.getPayment().setCardInfo(cardNr.getText(), cvc.getText(), expiryDate);
+                paymentInfo.setText(booking.confirmBooking());
+                confirmButton.setDisable(true);
+                cardNr.setDisable(true);
+                cvc.setDisable(true);
+                expiryMonth.setDisable(true);
+                expiryYear.setDisable(true);
+            }else {
+                paymentInfo.setText("room unavailable");
+            }
         } else {
-            System.out.println("Please fill out valid card info");
+            paymentInfo.setText("Please fill out valid card info");
         }
+        Stage stage = (Stage) paymentInfo.getScene().getWindow();
+        stage.sizeToScene();
+    }
+    public void back(){
+        Stage stage = (Stage) confirmButton.getScene().getWindow();
+        stage.close();
     }
 }

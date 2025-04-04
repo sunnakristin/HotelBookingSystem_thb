@@ -4,52 +4,65 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment4_thb.BookingController">
+<VBox prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment4_thb.BookingController">
    <padding>
-      <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
 
    <!-- Booking Details Section -->
    <VBox spacing="10.0">
-      <Label text="Booking Details" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+      <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Booking Details" />
       <HBox spacing="10.0">
-         <Label text="Hotel:" style="-fx-font-weight: bold;" prefWidth="100.0"/>
-         <Label fx:id="hotelLabel" text="Hotel Name" prefWidth="400.0"/>
+         <Label prefWidth="100.0" style="-fx-font-weight: bold;" text="Hotel:" />
+         <Label fx:id="hotelLabel" prefWidth="400.0" text="Hotel Name" />
       </HBox>
       <HBox spacing="10.0">
-         <Label text="Room Type:" style="-fx-font-weight: bold;" prefWidth="100.0"/>
-         <Label fx:id="typeLabel" text="Type" prefWidth="400.0"/>
+         <Label prefWidth="100.0" style="-fx-font-weight: bold;" text="Room Type:" />
+         <Label fx:id="typeLabel" prefWidth="400.0" text="Type" />
       </HBox>
       <HBox spacing="10.0">
-         <Label text="Price:" style="-fx-font-weight: bold;" prefWidth="100.0"/>
-         <Label fx:id="priceLabel" text="Price" prefWidth="400.0"/>
+         <Label prefWidth="100.0" style="-fx-font-weight: bold;" text="Price:" />
+         <Label fx:id="priceLabel" prefWidth="400.0" text="Price" />
       </HBox>
    </VBox>
 
    <!-- Payment Information Section -->
    <VBox spacing="10.0">
-      <Label text="Payment Information" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+      <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Payment Information" />
       <HBox spacing="10.0">
-         <Label text="Card #:" style="-fx-font-weight: bold;" prefWidth="100.0"/>
-         <TextField fx:id="cardNr" prefWidth="200.0"/>
+         <Label prefWidth="100.0" style="-fx-font-weight: bold;" text="Card #:" />
+         <TextField fx:id="cardNr" prefWidth="200.0" />
       </HBox>
       <HBox spacing="10.0">
-         <Label text="CVC:" style="-fx-font-weight: bold;" prefWidth="100.0"/>
-         <TextField fx:id="cvc" prefWidth="100.0"/>
+         <Label prefWidth="100.0" style="-fx-font-weight: bold;" text="CVC:" />
+         <TextField fx:id="cvc" prefWidth="100.0" />
       </HBox>
       <HBox spacing="10.0">
-         <Label text="Expiry Date:" style="-fx-font-weight: bold;" prefWidth="100.0"/>
-         <TextField fx:id="expiryMonth" promptText="MM" prefWidth="50.0"/>
-         <Label text="/" prefWidth="10.0"/>
-         <TextField fx:id="expiryYear" promptText="YY" prefWidth="50.0"/>
+         <Label prefWidth="100.0" style="-fx-font-weight: bold;" text="Expiry Date:" />
+         <TextField fx:id="expiryMonth" prefWidth="50.0" promptText="MM" />
+         <Label prefWidth="10.0" text="/" />
+         <TextField fx:id="expiryYear" prefWidth="50.0" promptText="YY" />
       </HBox>
+   </VBox>
+   <VBox>
+      <children>
+         <Label fx:id="paymentInfo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" wrapText="true" VBox.vgrow="ALWAYS" />
+      </children>
    </VBox>
 
    <!-- Confirm Button -->
-   <HBox alignment="CENTER_RIGHT">
-      <Button fx:id="confirmButton" text="Confirm" prefHeight="40.0" prefWidth="150.0"/>
+   <HBox alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS">
+      <Button fx:id="confirmButton" prefHeight="40.0" prefWidth="150.0" text="Confirm">
+         <HBox.margin>
+            <Insets right="100.0" />
+         </HBox.margin></Button>
+      <Button fx:id="backButton" prefHeight="40.0" prefWidth="150.0" text="Back">
+         <HBox.margin>
+            <Insets left="100.0" />
+         </HBox.margin>
+      </Button>
    </HBox>
 </VBox>

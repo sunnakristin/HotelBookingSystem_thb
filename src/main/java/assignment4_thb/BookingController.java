@@ -4,64 +4,81 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.text.MessageFormat;
 
 public class BookingController {
-    Booking booking;
-    @FXML
-    private Label typeLabel;
-    @FXML
-    private Label priceLabel;
-    @FXML
-    private Button confirmButton;
-    @FXML
-    private Button backButton;
-    @FXML
-    private TextField cardNr;
-    @FXML
-    private TextField cvc;
-    @FXML
-    private TextField expiryMonth;
-    @FXML
-    private Label info;
+    @FXML private Label hotelLabel;
+    @FXML private Label typeLabel;
+    @FXML private Label priceLabel;
+    @FXML private Button confirmButton;
+    @FXML private TextField cardNr;
+    @FXML private TextField cvc;
+    @FXML private TextField expiryMonth;
+    @FXML private TextField expiryYear;
 
-    public BookingController(Booking booking){
+    private Booking booking;
+
+    public BookingController() {
+    }
+
+    @FXML
+    public void initialize() {
+        if (booking != null) {
+            confirmButton.setOnAction(e -> confirm());
+            hotelLabel.setText(booking.getHotelName());
+            typeLabel.setText(booking.getRoom().getType());
+            priceLabel.setText(String.format("%.2f $", booking.getRoom().getPrice()));
+        }
+    }
+
+    public void setBooking(Booking booking) {
         this.booking = booking;
     }
-    public void initialize(){
-        if(booking != null){
-            confirmButton.setOnAction(e -> confirm());
-            backButton.setOnAction(e -> back());
-            this.typeLabel.setText("Type: " + booking.getRoom().getType());
-            this.priceLabel.setText("Price: " + booking.getRoom().getPrice());
-        }
-    }
-    private boolean validCardNr(){
+
+    private boolean validCardNr() {
         return cardNr.getText().matches("\\d{4} \\d{4} \\d{4} \\d{4}");
     }
-    private boolean validCVC(){
+
+    private boolean validCVC() {
         return cvc.getText().matches("\\d{3}");
     }
-    private boolean validExpiryMonth(){
-        return expiryMonth.getText().matches("^(0[1-9]|1[0-2])/(2[5-9]|[3-9][0-9])$");
-    }
-    public void confirm(){
-        if(validCardNr() && validCVC() && validExpiryMonth()){
-            if(booking.getRoom().getAvailability()) {
-                booking.getPayment().setCardInfo(cardNr.getText(), cvc.getText(), expiryMonth.getText());
-                info.setText(booking.confirm());
-                confirmButton.setDisable(true);
-                cardNr.setDisable(true);
-                cvc.setDisable(true);
-                expiryMonth.setDisable(true);
-            } else {
-                info.setText("Unavailable");
-            }
-        }else{
-            info.setText("Please fill out valid card info");
+
+    private boolean validExpiryDate() {
+        String month = expiryMonth.getText();
+        String year = expiryYear.getText();
+
+        // Validate month (01-12)
+        if (!month.matches("^(0[1-9]|1[0-2])$")) {
+            return false;
         }
+
+        // Validate year (25-99 for 2025-2099)
+        if (!year.matches("^(2[5-9]|[3-9][0-9])$")) {
+            return false;
+        }
+
+        // Ensure the date is not in the past
+        int monthNum = Integer.parseInt(month);
+        int yearNum = Integer.parseInt(year) + 2000; // Convert "25" to 2025
+        int currentYear = java.time.LocalDate.now().getYear();
+        int currentMonth = java.time.LocalDate.now().getMonthValue();
+
+        if (yearNum < currentYear || (yearNum == currentYear && monthNum < currentMonth)) {
+            return false;
+        }
+        return true;
     }
-    public void back(){
-        Stage stage = (Stage) confirmButton.getScene().getWindow();
-        stage.close();
+
+    @FXML
+    public void confirm() {
+        if (validCardNr() && validCVC() && validExpiryDate()) {
+            String expiryDate = expiryMonth.getText() + "/" + expiryYear.getText();
+            booking.getPayment().setCardInfo(cardNr.getText(), cvc.getText(), expiryDate);
+            booking.confirmBooking();
+            Stage stage = (Stage) confirmButton.getScene().getWindow();
+            stage.close();
+        } else {
+            System.out.println("Please fill out valid card info");
+        }
     }
 }

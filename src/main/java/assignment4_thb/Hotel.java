@@ -1,17 +1,24 @@
 package assignment4_thb;
+
 import java.util.List;
 
 public class Hotel {
-    private String name;
+    private final int hotelId;
+    private final String name;
+    private final String location;
     private List<HotelRoom> rooms;
-    private String location;
+    private final String description;
 
+    public Hotel(int hotelId, String name, String location, String description, List<HotelRoom> rooms) {
+        this.hotelId = hotelId;
+        this.name = name;
+        this.location = location;
+        this.description = description;
+        this.rooms = rooms;
+    }
 
-
-    public Hotel(String name, String location, List<HotelRoom> rooms) {
-       this.name = name;
-       this.location = location;
-       this.rooms = rooms;
+    public int getHotelId() {
+        return hotelId;
     }
 
     public String getName() {
@@ -28,5 +35,8 @@ public class Hotel {
 
     public void setRooms(List<HotelRoom> rooms) {
         this.rooms = rooms;
+    }
+    public String getDescription() {
+        return description;
     }
 }

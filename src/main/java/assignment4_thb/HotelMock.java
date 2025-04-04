@@ -4,14 +4,14 @@ import java.util.*;
 
 public class HotelMock {
 
-    public static List<Hotel> createHotels() {
+    /*public static List<Hotel> createHotels() {
         List<Hotel> hotels = new ArrayList<>();
         hotels.add(new Hotel("Hótel Örk", "Hveragerði",null));
         hotels.add(new Hotel("Hótel Akureyri", "Akureyri",null));
         hotels.add(new Hotel("Edition", "Reykjavík",null));
         hotels.add(new Hotel("Hótel Selfoss", "Selfoss",null));
         return hotels;
-    }
+    }*/
 
     /*public static List<Booking> createBookings(List<Hotel> hotels) {
         List<Booking> bookings = new ArrayList<>();

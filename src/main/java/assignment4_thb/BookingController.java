@@ -14,11 +14,15 @@ public class BookingController {
     @FXML
     private Button confirmButton;
     @FXML
+    private Button backButton;
+    @FXML
     private TextField cardNr;
     @FXML
     private TextField cvc;
     @FXML
     private TextField expiryMonth;
+    @FXML
+    private Label info;
 
     public BookingController(Booking booking){
         this.booking = booking;
@@ -26,12 +30,13 @@ public class BookingController {
     public void initialize(){
         if(booking != null){
             confirmButton.setOnAction(e -> confirm());
+            backButton.setOnAction(e -> back());
             this.typeLabel.setText("Type: " + booking.getRoom().getType());
             this.priceLabel.setText("Price: " + booking.getRoom().getPrice());
         }
     }
     private boolean validCardNr(){
-        return cardNr.getText().matches("\\d{4} \\d{4} \\d{4}");
+        return cardNr.getText().matches("\\d{4} \\d{4} \\d{4} \\d{4}");
     }
     private boolean validCVC(){
         return cvc.getText().matches("\\d{3}");
@@ -41,12 +46,22 @@ public class BookingController {
     }
     public void confirm(){
         if(validCardNr() && validCVC() && validExpiryMonth()){
-            booking.getPayment().setCardInfo(cardNr.getText(), cvc.getText(), expiryMonth.getText());
-            booking.confirm();
-            Stage stage = (Stage) confirmButton.getScene().getWindow();
-            stage.close();
+            if(booking.getRoom().getAvailability()) {
+                booking.getPayment().setCardInfo(cardNr.getText(), cvc.getText(), expiryMonth.getText());
+                info.setText(booking.confirm());
+                confirmButton.setDisable(true);
+                cardNr.setDisable(true);
+                cvc.setDisable(true);
+                expiryMonth.setDisable(true);
+            } else {
+                info.setText("Unavailable");
+            }
         }else{
-            System.out.println("Please fill out valid card info");
+            info.setText("Please fill out valid card info");
         }
+    }
+    public void back(){
+        Stage stage = (Stage) confirmButton.getScene().getWindow();
+        stage.close();
     }
 }

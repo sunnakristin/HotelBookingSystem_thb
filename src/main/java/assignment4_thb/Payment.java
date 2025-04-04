@@ -12,8 +12,8 @@ public class Payment {
         transactionId = booking.getBookingId()+100000000;
         amount = booking.getRoom().getPrice();
     }
-    public void process(){
-        System.out.println("transactionId: " + transactionId + "\nAmount:" + amount
+    public String process(){
+        return ("transactionId: " + transactionId + "\nAmount:" + amount
                 + "\nCardNr: "+cardNr+ "\nCVC: "+ cvc + "\nExpiryMonth: "+expiryMonth);
     }
 

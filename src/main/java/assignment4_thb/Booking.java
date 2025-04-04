@@ -18,23 +18,18 @@ public class Booking {
         return room;
     }
 
-    public void confirm(){
-        if(room.getAvailability()){
-            room.setAvailability(false);
-            sendConfirmation();
-            customer.addBooking(this);
-            payment.process();
-        } else {
-            System.out.println("Unavailable");
-        }
+    public String confirm(){
+        room.setAvailability(false);
+        customer.addBooking(this);
+        return sendConfirmation() + "\n" + payment.process();
     }
     public void cancel(){
         room.setAvailability(true);
         customer.removeBooking(this);
         payment.refund();
     }
-    public void sendConfirmation(){
-        System.out.println("bookingId: " + this.bookingId +"\nRoom: "+ this.room +"\nCustomer: "+ this.customer);
+    public String sendConfirmation(){
+        return ("bookingId: " + this.bookingId +"\nRoom: "+ this.room +"\nCustomer: "+ this.customer);
     }
 
     public Payment getPayment() {

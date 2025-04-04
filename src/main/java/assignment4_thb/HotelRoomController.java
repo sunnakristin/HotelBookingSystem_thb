@@ -15,6 +15,10 @@ import java.util.*;
 import java.time.LocalDate;
 
 public class HotelRoomController {
+/*
+
+ER EKKI AÐ  NOTA!!
+
 
     @FXML
     private ComboBox<String> roomTypeComboBox;

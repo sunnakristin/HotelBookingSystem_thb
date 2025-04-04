@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 
 
 public class BookingController {
-    Booking booking;
+    private Booking booking;
     @FXML
     private Label typeLabel;
     @FXML
@@ -20,8 +20,8 @@ public class BookingController {
     @FXML
     private TextField expiryMonth;
 
-    public BookingController(Booking booking){
-        this.booking = booking;
+    public BookingController(){
+
     }
     public void initialize(){
         if(booking != null){
@@ -30,12 +30,18 @@ public class BookingController {
             this.priceLabel.setText("Price: " + booking.getRoom().getPrice());
         }
     }
+
+    public void setBooking(Booking booking) {
+        this.booking = booking;
+    }
     private boolean validCardNr(){
         return cardNr.getText().matches("\\d{4} \\d{4} \\d{4}");
     }
+
     private boolean validCVC(){
         return cvc.getText().matches("\\d{3}");
     }
+
     private boolean validExpiryMonth(){
         return expiryMonth.getText().matches("^(0[1-9]|1[0-2])/(2[5-9]|[3-9][0-9])$");
     }

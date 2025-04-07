@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment4_thb.SearchController">
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment4_thb.SearchController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -26,7 +36,7 @@
             <Button fx:id="searchButton" onAction="#onSearch" text="Leita" />
         </HBox>
 
-        <TableView fx:id="hotelTable" prefHeight="200" VBox.vgrow="ALWAYS">
+        <TableView fx:id="hotelTable" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="nameColumn" prefWidth="200" text="Hotel Name" />
                 <TableColumn fx:id="locationColumn" prefWidth="200" text="Location" />
@@ -65,7 +75,7 @@
                 <Button fx:id="searchRoomsButton" onAction="#onSearchRooms" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Search Available Rooms" />
             </HBox>
 
-            <TableView fx:id="availableRoomsTable" prefHeight="200" VBox.vgrow="ALWAYS">
+            <TableView fx:id="availableRoomsTable" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="roomTypeColumn" prefWidth="100" text="Room Type" />
                     <TableColumn fx:id="priceColumn" prefWidth="100" text="Price" />
@@ -79,14 +89,14 @@
     <VBox spacing="10.0">
         <Label style="-fx-font-size: 24px;" text="My Bookings" />
         
-        <TableView fx:id="bookingsTable" prefHeight="200" VBox.vgrow="ALWAYS">
+        <TableView fx:id="bookingsTable" minHeight="75.0" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="hotelNameColumn" prefWidth="150" text="Hotel" />
-                <TableColumn fx:id="checkInColumn" prefWidth="100" text="Check-in" />
-                <TableColumn fx:id="checkOutColumn" prefWidth="100" text="Check-out" />
+                <TableColumn fx:id="typeColumn" prefWidth="100" text="Room Type" />
+                <TableColumn fx:id="hotelLocationColumn" prefWidth="100" text="Location" />
                 <TableColumn fx:id="guestsColumn" prefWidth="80" text="Guests" />
                 <TableColumn fx:id="priceColumnBooking" prefWidth="100" text="Price" />
-                <TableColumn fx:id="statusColumn" prefWidth="100" text="Status" />
+                <TableColumn fx:id="cancelColumn" prefWidth="100"/>
             </columns>
         </TableView>
     </VBox>

@@ -27,7 +27,7 @@ public class BookingController {
         if (booking != null) {
             confirmButton.setOnAction(e -> confirm());
             backButton.setOnAction(e -> back());
-            hotelLabel.setText(booking.getHotelName());
+            hotelLabel.setText(booking.getHotel().getName());
             typeLabel.setText(booking.getRoom().getType());
             priceLabel.setText(String.format("%.2f $", booking.getRoom().getPrice()));
         }
@@ -80,6 +80,7 @@ public class BookingController {
                 booking.getPayment().setCardInfo(cardNr.getText(), cvc.getText(), expiryDate);
                 paymentInfo.setText(booking.confirmBooking());
                 searchController.onSearchRooms();
+                searchController.updateBookings();
                 confirmButton.setDisable(true);
                 cardNr.setDisable(true);
                 cvc.setDisable(true);

@@ -33,7 +33,6 @@
 
     <VBox spacing="10.0">
         <Label style="-fx-font-size: 24px;" text="Search Hotels" />
-        
         <HBox alignment="CENTER" spacing="10.0">
             <TextField fx:id="searchField" prefWidth="300" promptText="Search by hotel name or location..." />
             <Button fx:id="searchButton" onAction="#onSearch" text="Leita" />

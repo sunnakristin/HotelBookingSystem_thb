@@ -149,25 +149,6 @@ public class CustomerController {
         }
     }
 
-    private void openProfileAndSearchWindow(ActionEvent event) {
-        try {
-            Stage registerStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("profileAndSearch-view.fxml"));
-            Parent root = loader.load(); // can throw IOException
-            Scene scene = new Scene(root);
-            registerStage.setScene(scene);
-            registerStage.setTitle("Profile and Search");
-
-            Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            registerStage.initOwner(primaryStage);
-            registerStage.initModality(Modality.APPLICATION_MODAL);
-            registerStage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to open the Profile and Search window: " + e.getMessage());
-        }
-    }
-
     @FXML
     public void handleLoginForm(ActionEvent event) {
         String email = fxEmailField2.getText().trim();
@@ -189,6 +170,10 @@ public class CustomerController {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 String userName = rs.getString("name");
+                String userEmail = rs.getString("email");
+                String userPassword = rs.getString("password");
+
+                Customer customer = new Customer(userName, userEmail, userPassword);
 
                 // Wrap the loader call in a try/catch
                 try {
@@ -197,7 +182,7 @@ public class CustomerController {
 
                     // Get the controller and pass the user name
                     SearchController controller = loader.getController();
-                    controller.setUserName(userName);
+                    controller.setCurrentCustomer(customer);
 
                     // Show the new stage
                     Stage profileStage = new Stage();
@@ -207,8 +192,6 @@ public class CustomerController {
                     profileStage.initOwner(primaryStage);
                     profileStage.initModality(Modality.APPLICATION_MODAL);
                     profileStage.showAndWait();
-
-                    openProfileAndSearchWindow(event);
                 } catch (IOException e) {
                     e.printStackTrace();
                     showAlert("Error", "Could not load the Profile and Search window: " + e.getMessage());

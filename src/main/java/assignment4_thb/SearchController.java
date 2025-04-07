@@ -39,6 +39,7 @@ public class SearchController {
     @FXML private TableColumn<Booking, Integer> guestsColumn;
     @FXML private TableColumn<Booking, Double> priceColumnBooking;
     @FXML private TableView<Booking> bookingsTable;
+    @FXML private TableColumn<Booking, Void> cancelColumn;
     private Hotel selectedHotel;
     private Customer currentCustomer;
 
@@ -78,6 +79,24 @@ public class SearchController {
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 setGraphic(empty ? null : bookButton);
+            }
+        });
+        cancelColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button cancelButton = new Button("Cancel");
+            {
+                cancelButton.setOnAction(event -> {
+                    try {
+                        cancelBooking(getTableView().getItems().get(getIndex()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : cancelButton);
             }
         });
 
@@ -145,7 +164,6 @@ public class SearchController {
 
     //hér förum við í greiðslu/bókunar viðmótið
     private void bookRoom(HotelRoom room) throws IOException {
-        System.out.println("Booking room: " + room.getRoomId() + " for hotel: " + selectedHotel.getName());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/assignment4_thb/booking-view.fxml"));
         Parent bookingView = loader.load();
         BookingController controller = loader.getController();
@@ -162,8 +180,13 @@ public class SearchController {
     }
 
     public void updateBookings(){
-        System.out.println("Number of bookings: " + currentCustomer.getBookings().size());
         bookingsTable.setItems(currentCustomer.getBookings());
+    }
+
+    public void cancelBooking(Booking booking) throws IOException{
+        booking.cancel();
+        updateBookings();
+        onSearchRooms();
     }
 
     @FXML private void onSearch() {

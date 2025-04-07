@@ -23,7 +23,6 @@ public class Customer {
     }
 
     public void removeBooking(Booking booking){
-        booking.cancel();
         bookings.remove(booking);
     }
     public Customer(String name, String email, String password) {

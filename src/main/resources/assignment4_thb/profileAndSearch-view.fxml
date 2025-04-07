@@ -103,7 +103,7 @@
                 <TableColumn fx:id="hotelLocationColumn" prefWidth="100" text="Location" />
                 <TableColumn fx:id="guestsColumn" prefWidth="80" text="Guests" />
                 <TableColumn fx:id="priceColumnBooking" prefWidth="100" text="Price" />
-                <TableColumn fx:id="cancelColumn" prefWidth="100" text="Price" />
+                <TableColumn fx:id="cancelColumn" prefWidth="100"/>
             </columns>
         </TableView>
     </VBox>

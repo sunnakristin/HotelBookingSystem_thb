@@ -35,12 +35,13 @@ public class SearchController {
     @FXML private TableColumn<HotelRoom, Integer> maxGuestsColumn;
     @FXML private TableColumn<HotelRoom, Void> bookColumn;
     @FXML private Label hotelNameLabel;
-    @FXML private TableColumn<Object, String> hotelNameColumn;
-    @FXML private TableColumn<Object, String> checkInColumn;
-    @FXML private TableColumn<Object, String> checkOutColumn;
-    @FXML private TableColumn<Object, Integer> guestsColumn;
-    @FXML private TableColumn<Object, Double> priceColumnBooking;
-    @FXML private TableColumn<Object, String> statusColumn;
+    @FXML private TableColumn<Booking, String> hotelNameColumn;
+    @FXML private TableColumn<Booking, String> typeColumn;
+    @FXML private TableColumn<Booking, String> hotelLocationColumn;
+    @FXML private TableColumn<Booking, Integer> guestsColumn;
+    @FXML private TableColumn<Booking, Double> priceColumnBooking;
+    @FXML private TableView<Booking> bookingsTable;
+    @FXML private TableColumn<Booking, Void> cancelColumn;
     @FXML private Label welcomeLabel;
     @FXML private Button logOutButton;
 
@@ -85,14 +86,30 @@ public class SearchController {
                 setGraphic(empty ? null : bookButton);
             }
         });
+        cancelColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button cancelButton = new Button("Cancel");
+            {
+                cancelButton.setOnAction(event -> {
+                    try {
+                        cancelBooking(getTableView().getItems().get(getIndex()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
 
-        hotelNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty("Not implemented"));
-        checkInColumn.setCellValueFactory(cellData -> new SimpleStringProperty(""));
-        checkOutColumn.setCellValueFactory(cellData -> new SimpleStringProperty(""));
-        guestsColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(0).asObject());
-        priceColumnBooking.setCellValueFactory(cellData -> new SimpleDoubleProperty(0.0).asObject());
-        statusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(""));
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : cancelButton);
+            }
+        });
 
+        hotelNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHotel().getName()));
+        typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRoom().getType()));
+        hotelLocationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHotel().getLocation()));
+        guestsColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getRoom().getMaxGuests()).asObject());
+        priceColumnBooking.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getRoom().getPrice()).asObject());
         hotelDetailsContainer.setVisible(false);
         hotelTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -151,12 +168,10 @@ public class SearchController {
 
     //hér förum við í greiðslu/bókunar viðmótið
     private void bookRoom(HotelRoom room) throws IOException {
-        System.out.println("Booking room: " + room.getRoomId() + " for hotel: " + selectedHotel.getName());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/assignment4_thb/booking-view.fxml"));
         Parent bookingView = loader.load();
         BookingController controller = loader.getController();
         controller.setSearchController(this);
-        setCurrentCustomer(new Customer("aaa", "aaa@hi.is", "aaa"));
         Booking booking = new Booking(currentCustomer, selectedHotel, room); // Búm til nýja bókun, hér þarf að tengja það saman
         controller.setBooking(booking);
         controller.initialize();
@@ -166,6 +181,16 @@ public class SearchController {
         stage.setTitle("Booking Details");
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void updateBookings(){
+        bookingsTable.setItems(currentCustomer.getBookings());
+    }
+
+    public void cancelBooking(Booking booking) throws IOException{
+        booking.cancel();
+        updateBookings();
+        onSearchRooms();
     }
 
     @FXML private void onSearch() {
@@ -241,10 +266,6 @@ public class SearchController {
         }
     }
 
-    public void setUserName(String name) {
-        welcomeLabel.setText("Welcome, " + name);
-    }
-
     //er ekkert að leita eftir dögum svo taka út?
     private List<HotelRoom> searchAvailableRooms(int hotelId, String roomType, Integer guests, LocalDate checkInDate, LocalDate checkOutDate) {
         List<HotelRoom> availableRooms = new ArrayList<>();
@@ -288,5 +309,6 @@ public class SearchController {
     // skoða, þarf að tengjast við bókun
     public void setCurrentCustomer(Customer customer) {
         this.currentCustomer = customer;
+        welcomeLabel.setText("Welcome, " + customer.getName());
     }
 }

@@ -7,9 +7,6 @@ public class Customer {
     private String email;
     private String password;
     private ArrayList<Booking> bookings;
-    //private String preferredLanguage;
-    //private String cardInfo;
-    //private List<Review> reviews;
 
     public void addBooking(Booking booking){
         bookings.add(booking);
@@ -41,24 +38,6 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
-    /*
-    public String getPreferredLanguage() {
-        return preferredLanguage;
-    }
-
-    public void setPreferredLanguage(String preferredLanguage) {
-        this.preferredLanguage = preferredLanguage;
-    }
-
-    public String getCardInfo() {
-        return cardInfo;
-    }
-
-    public void setCardInfo(String cardInfo) {
-        this.cardInfo = cardInfo;
-    }
-
-     */
 
     public void setPassword(String password) {
         this.password = password;
@@ -67,15 +46,4 @@ public class Customer {
     public boolean verifyPassword(String password) {
         return this.password.equals(password);
     }
-
-    /*
-    public void addReview(Review review) {
-        reviews.add(review);
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-     */
 }

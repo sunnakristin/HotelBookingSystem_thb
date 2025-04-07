@@ -19,38 +19,18 @@ import javafx.scene.Parent;
 
 public class CustomerController {
 
-    @FXML
-    public Button fxBackToLoginButton;
+    @FXML public Button fxBackToLoginButton;
 
-    @FXML
-    public PasswordField fxVerifyPasswordField;
-
-    @FXML
-    public Button fxLoginButton;
-
-    @FXML
-    public TextField fxEmailField2;
-
-    @FXML
-    public PasswordField fxPasswordField2;
-
-    @FXML
-    private Button fxRegisterButton;
-
-    @FXML
-    private PasswordField fxPasswordField;
-
-    @FXML
-    private TextField fxEmailField;
-
-    @FXML
-    private TextField fxNameField;
-
-    @FXML
-    private Button fxLogin;
-
-    @FXML
-    private Button fxRegister;
+    @FXML public PasswordField fxVerifyPasswordField;
+    @FXML public Button fxLoginButton;
+    @FXML public TextField fxEmailField2;
+    @FXML public PasswordField fxPasswordField2;
+    @FXML private Button fxRegisterButton;
+    @FXML private PasswordField fxPasswordField;
+    @FXML private TextField fxEmailField;
+    @FXML private TextField fxNameField;
+    @FXML private Button fxLogin;
+    @FXML private Button fxRegister;
 
     private List<Customer> customers;
 
@@ -113,22 +93,6 @@ public class CustomerController {
             return;
         }
 
-        // Tékka hvort email sé nú þegar í database
-        /*
-        if (emailExistsInDatabase(email)) {
-            showAlert("Error", "Email is already registered.");
-            return;
-        }
-         */
-
-        /*
-        if (!isNameAllowed(name)) {
-            showAlert("Error", "Registration is not allowed for the name: " + name);
-            return;
-        }
-
-         */
-
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {
             String insertSQL = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(insertSQL);
@@ -190,16 +154,16 @@ public class CustomerController {
             if (rs.next()) {
                 String userName = rs.getString("name");
 
-                // Wrap the loader call in a try/catch
+                Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                loginStage.close();
+
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("profileAndSearch-view.fxml"));
-                    Parent root = loader.load();  // can throw IOException
+                    Parent root = loader.load();
 
-                    // Get the controller and pass the user name
                     SearchController controller = loader.getController();
                     controller.setUserName(userName);
 
-                    // Show the new stage
                     Stage profileStage = new Stage();
                     profileStage.setScene(new Scene(root));
                     profileStage.setTitle("Profile and Search");

@@ -11,7 +11,8 @@
 
     <HBox alignment="CENTER_LEFT" spacing="10.0">
         <Label fx:id="welcomeLabel" style="-fx-font-size: 18px;" text="Welcome, User 1" />
-      <Button fx:id="logOutButton" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Log out" textAlignment="RIGHT">
+        <Region HBox.hgrow="ALWAYS" />
+      <Button fx:id="logOutButton" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Log out" textAlignment="RIGHT" onAction="#handleLogout">
          <HBox.margin>
             <Insets left="400.0" />
          </HBox.margin>

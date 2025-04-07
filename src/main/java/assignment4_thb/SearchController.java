@@ -42,6 +42,7 @@ public class SearchController {
     @FXML private TableColumn<Object, Double> priceColumnBooking;
     @FXML private TableColumn<Object, String> statusColumn;
     @FXML private Label welcomeLabel;
+    @FXML private Button logOutButton;
 
     private Hotel selectedHotel;
     private Customer currentCustomer;
@@ -182,6 +183,12 @@ public class SearchController {
         } catch (Exception e) {
             System.out.println("Error loading profile view: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        Stage stage = (Stage) logOutButton.getScene().getWindow();
+        stage.close();
     }
 
     private void loadHotelsFromDatabase(String searchText) {

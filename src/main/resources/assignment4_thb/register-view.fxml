@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -18,12 +14,29 @@
             fx:controller="assignment4_thb.CustomerController"
             prefHeight="400.0" prefWidth="600.0">
 
-    <VBox alignment="CENTER" spacing="10" layoutX="50" layoutY="30">
+    <!-- A VBox that fills the entire AnchorPane -->
+    <VBox alignment="CENTER" spacing="10"
+          AnchorPane.topAnchor="0.0"
+          AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0">
+
+        <!-- Title Label -->
         <Label text="Register New Account" style="-fx-font-size: 16; -fx-font-weight: bold;" />
-        <TextField fx:id="fxNameField" promptText="Name" prefWidth="200" />
-        <TextField fx:id="fxEmailField" promptText="Email" prefWidth="200" />
-        <PasswordField fx:id="fxPasswordField" promptText="Password" prefWidth="200" />
-        <PasswordField fx:id="fxVerifyPasswordField" promptText="Verify Password" prefWidth="200" />
+
+        <!-- Name Field -->
+        <TextField fx:id="fxNameField" promptText="Name" prefWidth="200" maxWidth="200" />
+
+        <!-- Email Field -->
+        <TextField fx:id="fxEmailField" promptText="Email" prefWidth="200" maxWidth="200" />
+
+        <!-- Password Field -->
+        <PasswordField fx:id="fxPasswordField" promptText="Password" prefWidth="200" maxWidth="200" />
+
+        <!-- Verify Password Field -->
+        <PasswordField fx:id="fxVerifyPasswordField" promptText="Verify Password" prefWidth="200" maxWidth="200" />
+
+        <!-- Button Row -->
         <HBox alignment="CENTER" spacing="10">
             <Button fx:id="fxBackToLoginButton" text="Back" onAction="#handleBackToLogin"/>
             <Button fx:id="fxRegisterButton" text="Register" onAction="#handleRegisterForm"/>

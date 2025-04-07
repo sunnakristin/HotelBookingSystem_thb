@@ -149,6 +149,7 @@ public class SearchController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/assignment4_thb/booking-view.fxml"));
         Parent bookingView = loader.load();
         BookingController controller = loader.getController();
+        setCurrentCustomer(new Customer("aaa", "aaa@hi.is", "aaa"));
         Booking booking = new Booking(currentCustomer, selectedHotel, room); // Búm til nýja bókun, hér þarf að tengja það saman
         controller.setBooking(booking);
         controller.initialize();

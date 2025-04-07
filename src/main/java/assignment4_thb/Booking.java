@@ -1,8 +1,6 @@
 package assignment4_thb;
 
 public class Booking {
-    private final int bookingId;
-    private static int totalBookings = 0;
     private final HotelRoom room;
     private final Customer customer;
     private Payment payment;
@@ -13,7 +11,6 @@ public class Booking {
         this.customer = customer;
         this.room = room;
         this.hotel = hotel;
-        bookingId = 100000000 + totalBookings++;
         payment = new Payment(this);
     }
 
@@ -23,8 +20,9 @@ public class Booking {
 
     public String confirmBooking(){
         room.setAvailability(false);
-        //customer.addBooking(this);
-        return sendConfirmation() +"\n"+payment.process();
+        customer.addBooking(this);
+        payment.process();
+        return sendConfirmation();
     }
     public void cancel(){
         room.setAvailability(true);
@@ -32,15 +30,11 @@ public class Booking {
         payment.refund();
     }
     public String sendConfirmation(){
-        return("bookingId: " + this.bookingId +"\nRoom: "+ this.room +"\nCustomer: "+ this.customer);
+        return("An email confirmation has been sent to: " + customer.getEmail());
     }
 
     public Payment getPayment() {
         return payment;
-    }
-
-    public int getBookingId() {
-        return bookingId;
     }
 
     public String getHotelName() {

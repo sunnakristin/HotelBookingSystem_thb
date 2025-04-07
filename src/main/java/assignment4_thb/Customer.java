@@ -1,12 +1,15 @@
 package assignment4_thb;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 
 public class Customer {
     private String name;
     private String email;
     private String password;
-    private ArrayList<Booking> bookings;
+    private ObservableList<Booking> bookings;
     //private String preferredLanguage;
     //private String cardInfo;
     //private List<Review> reviews;
@@ -14,6 +17,11 @@ public class Customer {
     public void addBooking(Booking booking){
         bookings.add(booking);
     }
+
+    public ObservableList<Booking> getBookings() {
+        return bookings;
+    }
+
     public void removeBooking(Booking booking){
         booking.cancel();
         bookings.remove(booking);
@@ -22,7 +30,7 @@ public class Customer {
         this.name = name;
         this.email = email;
         this.password = password;
-        bookings = new ArrayList<>();
+        bookings = FXCollections.observableArrayList();
         //this.reviews = new ArrayList<>();
     }
 

@@ -33,13 +33,12 @@ public class SearchController {
     @FXML private TableColumn<HotelRoom, Integer> maxGuestsColumn;
     @FXML private TableColumn<HotelRoom, Void> bookColumn;
     @FXML private Label hotelNameLabel;
-    @FXML private TableColumn<Object, String> hotelNameColumn;
-    @FXML private TableColumn<Object, String> checkInColumn;
-    @FXML private TableColumn<Object, String> checkOutColumn;
-    @FXML private TableColumn<Object, Integer> guestsColumn;
-    @FXML private TableColumn<Object, Double> priceColumnBooking;
-    @FXML private TableColumn<Object, String> statusColumn;
-
+    @FXML private TableColumn<Booking, String> hotelNameColumn;
+    @FXML private TableColumn<Booking, String> typeColumn;
+    @FXML private TableColumn<Booking, String> hotelLocationColumn;
+    @FXML private TableColumn<Booking, Integer> guestsColumn;
+    @FXML private TableColumn<Booking, Double> priceColumnBooking;
+    @FXML private TableView<Booking> bookingsTable;
     private Hotel selectedHotel;
     private Customer currentCustomer;
 
@@ -82,13 +81,11 @@ public class SearchController {
             }
         });
 
-        hotelNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty("Not implemented"));
-        checkInColumn.setCellValueFactory(cellData -> new SimpleStringProperty(""));
-        checkOutColumn.setCellValueFactory(cellData -> new SimpleStringProperty(""));
-        guestsColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(0).asObject());
-        priceColumnBooking.setCellValueFactory(cellData -> new SimpleDoubleProperty(0.0).asObject());
-        statusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(""));
-
+        hotelNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHotel().getName()));
+        typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRoom().getType()));
+        hotelLocationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHotel().getLocation()));
+        guestsColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getRoom().getMaxGuests()).asObject());
+        priceColumnBooking.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getRoom().getPrice()).asObject());
         hotelDetailsContainer.setVisible(false);
         hotelTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -110,6 +107,7 @@ public class SearchController {
         checkOutDatePicker.setValue(LocalDate.now().plusDays(2));
 
         loadHotelsFromDatabase("");
+        setCurrentCustomer(new Customer("aaa", "aaa@hi.is", "aaa"));
     }
 
     @FXML
@@ -152,7 +150,6 @@ public class SearchController {
         Parent bookingView = loader.load();
         BookingController controller = loader.getController();
         controller.setSearchController(this);
-        setCurrentCustomer(new Customer("aaa", "aaa@hi.is", "aaa"));
         Booking booking = new Booking(currentCustomer, selectedHotel, room); // Búm til nýja bókun, hér þarf að tengja það saman
         controller.setBooking(booking);
         controller.initialize();
@@ -162,6 +159,11 @@ public class SearchController {
         stage.setTitle("Booking Details");
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void updateBookings(){
+        System.out.println("Number of bookings: " + currentCustomer.getBookings().size());
+        bookingsTable.setItems(currentCustomer.getBookings());
     }
 
     @FXML private void onSearch() {

@@ -60,7 +60,7 @@ public class Booking {
         return payment;
     }
 
-    public String getHotelName() {
-        return hotel.getName();
+    public Hotel getHotel() {
+        return hotel;
     }
 }

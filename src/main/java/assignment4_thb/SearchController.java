@@ -41,6 +41,7 @@ public class SearchController {
     @FXML private TableColumn<Object, Integer> guestsColumn;
     @FXML private TableColumn<Object, Double> priceColumnBooking;
     @FXML private TableColumn<Object, String> statusColumn;
+    @FXML private Label welcomeLabel;
 
     private Hotel selectedHotel;
     private Customer currentCustomer;
@@ -231,6 +232,10 @@ public class SearchController {
         } catch (SQLException e) {
             System.out.println("Error loading room types: " + e.getMessage());
         }
+    }
+
+    public void setUserName(String name) {
+        welcomeLabel.setText("Welcome, " + name);
     }
 
     //er ekkert að leita eftir dögum svo taka út?

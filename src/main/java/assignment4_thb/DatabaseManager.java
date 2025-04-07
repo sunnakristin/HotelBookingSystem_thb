@@ -16,9 +16,9 @@ public class DatabaseManager {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(DB_URL);
             // Enable busy timeout to wait for the database to become available
-            connection.createStatement().execute("PRAGMA busy_timeout = 30000;"); // 30 seconds
+            //connection.createStatement().execute("PRAGMA busy_timeout = 30000;"); // 30 seconds
             // Enable WAL mode for better concurrency
-            connection.createStatement().execute("PRAGMA journal_mode=WAL;");
+            // connection.createStatement().execute("PRAGMA journal_mode=WAL;");
         }
         return connection;
     }
@@ -33,16 +33,14 @@ public class DatabaseManager {
 
     public static void initializeDatabase() {
         Locale.setDefault(Locale.forLanguageTag("en-GB"));
-        try (Connection conn = getConnection()) {
-            // Drop existing tables to ensure a clean schema
-            try (Statement stmt = conn.createStatement()) {
-                stmt.execute("DROP TABLE IF EXISTS bookings");
-                stmt.execute("DROP TABLE IF EXISTS hotel_rooms");
-                stmt.execute("DROP TABLE IF EXISTS hotels");
-                stmt.execute("DROP TABLE IF EXISTS users");
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
+            if (conn != null) {
+                createTables(conn);
+                // Only populate with sample data if tables are empty
+                if (isTableEmpty(conn, "hotels")) {
+                    populateSampleData(conn);
+                }
             }
-            createTables(conn);
-            populateSampleData(conn);
         } catch (SQLException e) {
             System.out.println("Database initialization error: " + e.getMessage());
         }

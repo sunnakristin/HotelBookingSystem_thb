@@ -1,25 +1,48 @@
 package assignment4_thb;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Locale;
 
 public class DatabaseManager {
     private static final String DB_URL = "jdbc:sqlite:hotel.db";
+    private static Connection connection = null;
+
+    // Private constructor to prevent instantiation
+    private DatabaseManager() {}
+
+    // Get a single connection instance (singleton pattern)
+    public static synchronized Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = DriverManager.getConnection(DB_URL);
+            // Enable busy timeout to wait for the database to become available
+            connection.createStatement().execute("PRAGMA busy_timeout = 30000;"); // 30 seconds
+            // Enable WAL mode for better concurrency
+            connection.createStatement().execute("PRAGMA journal_mode=WAL;");
+        }
+        return connection;
+    }
+
+    // Close the connection when the application shuts down
+    public static synchronized void closeConnection() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+            connection = null;
+        }
+    }
 
     public static void initializeDatabase() {
         Locale.setDefault(Locale.forLanguageTag("en-GB"));
-        try (Connection conn = DriverManager.getConnection(DB_URL)) {
-            if (conn != null) {
-                // Drop existing tables to ensure a clean schema
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.execute("DROP TABLE IF EXISTS bookings");
-                    stmt.execute("DROP TABLE IF EXISTS hotel_rooms");
-                    stmt.execute("DROP TABLE IF EXISTS hotels");
-                    stmt.execute("DROP TABLE IF EXISTS users");
-                }
-                createTables(conn);
-                populateSampleData(conn);
+        try (Connection conn = getConnection()) {
+            // Drop existing tables to ensure a clean schema
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute("DROP TABLE IF EXISTS bookings");
+                stmt.execute("DROP TABLE IF EXISTS hotel_rooms");
+                stmt.execute("DROP TABLE IF EXISTS hotels");
+                stmt.execute("DROP TABLE IF EXISTS users");
             }
+            createTables(conn);
+            populateSampleData(conn);
         } catch (SQLException e) {
             System.out.println("Database initialization error: " + e.getMessage());
         }
@@ -123,6 +146,46 @@ public class DatabaseManager {
             stmt.execute(insertUsers);
             stmt.execute(insertHotels);
             stmt.execute(insertRooms);
+        }
+    }
+
+    // Method to update room availability
+    public void updateRoomAvailability(int roomId, boolean availability) throws SQLException {
+        try (Connection conn = getConnection()) {
+            String updateQuery = "UPDATE hotel_rooms SET availability = ? WHERE room_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+                pstmt.setInt(1, availability ? 1 : 0);
+                pstmt.setInt(2, roomId);
+                pstmt.executeUpdate();
+            }
+        }
+    }
+
+    // Method to save a booking
+    public void saveBooking(int userId, int roomId, LocalDate checkInDate, LocalDate checkOutDate, int numGuests, double totalPrice) throws SQLException {
+        try (Connection conn = getConnection()) {
+            String insertQuery = "INSERT INTO bookings (room_id, user_id, check_in_date, check_out_date, num_guests, total_price, booking_status) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, 1)";
+            try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
+                pstmt.setInt(1, roomId);
+                pstmt.setInt(2, userId);
+                pstmt.setString(3, checkInDate.toString());
+                pstmt.setString(4, checkOutDate.toString());
+                pstmt.setInt(5, numGuests);
+                pstmt.setDouble(6, totalPrice);
+                pstmt.executeUpdate();
+            }
+        }
+    }
+
+    // Method to cancel a booking (update booking_status to 0)
+    public void cancelBooking(int bookingId) throws SQLException {
+        try (Connection conn = getConnection()) {
+            String updateQuery = "UPDATE bookings SET booking_status = 0 WHERE booking_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+                pstmt.setInt(1, bookingId);
+                pstmt.executeUpdate();
+            }
         }
     }
 }

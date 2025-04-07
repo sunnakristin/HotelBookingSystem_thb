@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.Region?>
 
 
-<VBox alignment="CENTER" prefHeight="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment4_thb.SearchController">
+<VBox alignment="CENTER" prefWidth="1000" prefHeight="1000" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment4_thb.SearchController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -90,7 +90,7 @@
 
     <VBox spacing="10.0">
         <Label style="-fx-font-size: 24px;" text="My Bookings" />
-        
+
         <TableView fx:id="bookingsTable" minHeight="70.0" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="hotelNameColumn" prefWidth="150" text="Hotel" />

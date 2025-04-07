@@ -3,8 +3,6 @@ package assignment4_thb;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-
 public class Customer {
     private String name;
     private String email;
@@ -27,7 +25,6 @@ public class Customer {
         this.email = email;
         this.password = password;
         bookings = FXCollections.observableArrayList();
-        //this.reviews = new ArrayList<>();
     }
 
     public String getName() {
@@ -41,5 +38,4 @@ public class Customer {
     public boolean verifyPassword(String password) {
         return this.password.equals(password);
     }
-
 }

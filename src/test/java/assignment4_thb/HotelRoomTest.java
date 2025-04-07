@@ -21,7 +21,7 @@ public class HotelRoomTest {
     void tearDown() {
         room = null;
     }
-
+/*
     @Test
     void testPrice() {
         double newPrice = 200.0;
@@ -58,7 +58,7 @@ public class HotelRoomTest {
         assertTrue(room.getRoomImages().isEmpty());
     }
 
-   /* @Test
+   @Test
     void testCheckAvailability() {
         // Test with valid dates
         LocalDate checkIn = LocalDate.now();

@@ -130,7 +130,6 @@ public class SearchController {
         checkOutDatePicker.setValue(LocalDate.now().plusDays(2));
 
         loadHotelsFromDatabase("");
-        setCurrentCustomer(new Customer("aaa", "aaa@hi.is", "aaa"));
     }
 
     @FXML
@@ -260,10 +259,6 @@ public class SearchController {
         }
     }
 
-    public void setUserName(String name) {
-        welcomeLabel.setText("Welcome, " + name);
-    }
-
     //er ekkert að leita eftir dögum svo taka út?
     private List<HotelRoom> searchAvailableRooms(int hotelId, String roomType, Integer guests, LocalDate checkInDate, LocalDate checkOutDate) {
         List<HotelRoom> availableRooms = new ArrayList<>();
@@ -307,5 +302,6 @@ public class SearchController {
     // skoða, þarf að tengjast við bókun
     public void setCurrentCustomer(Customer customer) {
         this.currentCustomer = customer;
+        welcomeLabel.setText("Welcome, " + customer.getName());
     }
 }

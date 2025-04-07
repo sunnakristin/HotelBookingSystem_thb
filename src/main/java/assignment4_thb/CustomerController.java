@@ -173,7 +173,6 @@ public class CustomerController {
         String email = fxEmailField2.getText().trim();
         String password = fxPasswordField2.getText().trim();
 
-        // Basic validation: ensure fields aren't empty
         if (email.isEmpty() || password.isEmpty()) {
             showAlert("Error", "Email and password are required!");
             return;
@@ -189,8 +188,31 @@ public class CustomerController {
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                // User found, so login is successful
-                openProfileAndSearchWindow(event);
+                String userName = rs.getString("name");
+
+                // Wrap the loader call in a try/catch
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("profileAndSearch-view.fxml"));
+                    Parent root = loader.load();  // can throw IOException
+
+                    // Get the controller and pass the user name
+                    SearchController controller = loader.getController();
+                    controller.setUserName(userName);
+
+                    // Show the new stage
+                    Stage profileStage = new Stage();
+                    profileStage.setScene(new Scene(root));
+                    profileStage.setTitle("Profile and Search");
+                    Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    profileStage.initOwner(primaryStage);
+                    profileStage.initModality(Modality.APPLICATION_MODAL);
+                    profileStage.showAndWait();
+
+                    openProfileAndSearchWindow(event);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    showAlert("Error", "Could not load the Profile and Search window: " + e.getMessage());
+                }
             } else {
                 // No matching user in the database
                 showAlert("Error", "Invalid credentials or user not registered.");

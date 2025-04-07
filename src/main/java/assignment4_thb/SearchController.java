@@ -113,7 +113,7 @@ public class SearchController {
     }
 
     @FXML
-    private void onSearchRooms() {
+    public void onSearchRooms() {
         if (selectedHotel == null) {
             System.out.println("No hotel selected.");
             return;
@@ -139,7 +139,9 @@ public class SearchController {
         }
 
         List<HotelRoom> availableRooms = searchAvailableRooms(selectedHotel.getHotelId(), roomType, guests, checkInDate, checkOutDate);
-        availableRoomsTable.setItems(FXCollections.observableArrayList(availableRooms));
+        ObservableList<HotelRoom> observableRooms = FXCollections.observableArrayList(availableRooms);
+        availableRoomsTable.setItems(observableRooms);
+
         System.out.println("Displayed " + availableRooms.size() + " rooms for hotel " + selectedHotel.getName());
     }
 
@@ -149,6 +151,7 @@ public class SearchController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/assignment4_thb/booking-view.fxml"));
         Parent bookingView = loader.load();
         BookingController controller = loader.getController();
+        controller.setSearchController(this);
         setCurrentCustomer(new Customer("aaa", "aaa@hi.is", "aaa"));
         Booking booking = new Booking(currentCustomer, selectedHotel, room); // Búm til nýja bókun, hér þarf að tengja það saman
         controller.setBooking(booking);

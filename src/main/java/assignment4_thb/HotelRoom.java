@@ -1,9 +1,7 @@
 package assignment4_thb;
 
-import javafx.scene.image.Image;
-
-import java.util.ArrayList;
-import java.util.List;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 public class HotelRoom {
 
@@ -11,14 +9,13 @@ public class HotelRoom {
     private final String type;
     private final double price;
     private final int maxGuests;
-    private boolean availability;
-
+    private BooleanProperty availability = new SimpleBooleanProperty();
     public HotelRoom(int roomId, String type, double price, int maxGuests) {
         this.roomId = roomId;
         this.type = type;
         this.price = price;
         this.maxGuests = maxGuests;
-        this.availability = true;
+        setAvailability(true);
     }
 
     public int getRoomId() { return roomId; }
@@ -27,11 +24,11 @@ public class HotelRoom {
     public int getMaxGuests() { return maxGuests; }
 
     public boolean getAvailability() {
-        return availability;
+        return availability.get();
     }
 
     public void setAvailability(boolean availability) {
-        this.availability = availability;
+        this.availability.set(availability);
     }
 
 }

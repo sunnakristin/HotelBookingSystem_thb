@@ -9,14 +9,7 @@ public class Customer {
     private String name;
     private String email;
     private String password;
-<<<<<<< HEAD
-    private ArrayList<Booking> bookings;
-=======
     private ObservableList<Booking> bookings;
-    //private String preferredLanguage;
-    //private String cardInfo;
-    //private List<Review> reviews;
->>>>>>> 3b647d65790738cbda75afb8816627cb4ddf4c40
 
     public void addBooking(Booking booking){
         bookings.add(booking);

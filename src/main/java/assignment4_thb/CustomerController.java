@@ -14,9 +14,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
 
-
-
-
 public class CustomerController {
 
     @FXML public Button fxBackToLoginButton;
@@ -72,7 +69,7 @@ public class CustomerController {
             registerStage.showAndWait();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error loading: " + e.getMessage());
         }
     }
 
@@ -134,7 +131,6 @@ public class CustomerController {
                 String userName = rs.getString("name");
                 Customer customer = new Customer(userName, email, password);
 
-                // Close the login window
                 Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 loginStage.close();
 
@@ -142,34 +138,30 @@ public class CustomerController {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("profileAndSearch-view.fxml"));
                     Parent root = loader.load();
 
-                    // Pass the customer to the next controller
                     SearchController controller = loader.getController();
                     controller.setCurrentCustomer(customer);
 
-                    // Create and show the new window without setting the owner/modality
                     Stage profileStage = new Stage();
                     profileStage.setScene(new Scene(root));
-                    profileStage.setTitle("Profile and Search");
                     profileStage.show();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    showAlert("Error", "Could not load the Profile and Search window: " + e.getMessage());
+                    showAlert("Error", "Could not load the window: " + e.getMessage());
                 }
             } else {
                 showAlert("Error", "Invalid credentials or user not registered.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             showAlert("Error", "Database error: " + e.getMessage());
         }
     }
-
 
     @FXML
     public void handleBackToLogin(ActionEvent event) {
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 
+    /*
     public void SignUp(String name, String email, String password) {
         Customer customer = new Customer(name, email, password);
         customers.add(customer);
@@ -183,6 +175,8 @@ public class CustomerController {
     }
 
     public void logOut() {}
+
+     */
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

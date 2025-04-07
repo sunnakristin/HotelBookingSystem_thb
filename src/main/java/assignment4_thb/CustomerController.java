@@ -123,22 +123,18 @@ public class CustomerController {
             return;
         }
 
-        // Check if user exists in the database
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {
-            // Example query: checks if there's a matching email+password
             String query = "SELECT * FROM users WHERE email = ? AND password = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, email);
             stmt.setString(2, password);
-
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 String userName = rs.getString("name");
-                String userEmail = rs.getString("email");
-                String userPassword = rs.getString("password");
+                Customer customer = new Customer(userName, email, password);
 
-                Customer customer = new Customer(userName, userEmail, userPassword);
-
+                // Close the login window
                 Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 loginStage.close();
 
@@ -146,22 +142,20 @@ public class CustomerController {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("profileAndSearch-view.fxml"));
                     Parent root = loader.load();
 
+                    // Pass the customer to the next controller
                     SearchController controller = loader.getController();
                     controller.setCurrentCustomer(customer);
 
+                    // Create and show the new window without setting the owner/modality
                     Stage profileStage = new Stage();
                     profileStage.setScene(new Scene(root));
                     profileStage.setTitle("Profile and Search");
-                    Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    profileStage.initOwner(primaryStage);
-                    profileStage.initModality(Modality.APPLICATION_MODAL);
-                    profileStage.showAndWait();
+                    profileStage.show();
                 } catch (IOException e) {
                     e.printStackTrace();
                     showAlert("Error", "Could not load the Profile and Search window: " + e.getMessage());
                 }
             } else {
-                // No matching user in the database
                 showAlert("Error", "Invalid credentials or user not registered.");
             }
         } catch (SQLException e) {
@@ -169,6 +163,7 @@ public class CustomerController {
             showAlert("Error", "Database error: " + e.getMessage());
         }
     }
+
 
     @FXML
     public void handleBackToLogin(ActionEvent event) {

@@ -28,7 +28,6 @@ public class DatabaseManager {
     private static void createTables(Connection conn) throws SQLException {
         String createUsersTable = "CREATE TABLE IF NOT EXISTS users (" +
                 "user_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "username TEXT NOT NULL UNIQUE," +
                 "password TEXT NOT NULL," +
                 "email TEXT NOT NULL," +
                 "name TEXT NOT NULL" +
@@ -85,11 +84,11 @@ public class DatabaseManager {
 
     private static void populateSampleData(Connection conn) throws SQLException {
         System.out.println("Populating sample data...");
-        String insertUsers = "INSERT INTO users (username, password, email, name) VALUES " +
-                "('katrin1', 'password123', 'katrin@gmail.com', 'Katrín')," +
-                "('silja2', 'password123', 'silja@gmail.com', 'Silja Björk')," +
-                "('sunna3', 'password123', 'sunna@gmail.com', 'Sunna Kristín')," +
-                "('jonas4', 'password123', 'jonas@gmail.com', 'Jónas Bjarki');";
+        String insertUsers = "INSERT INTO users (password, email, name) VALUES " +
+                "('password123', 'katrin@gmail.com', 'Katrín')," +
+                "('password123', 'silja@gmail.com', 'Silja Björk')," +
+                "('password123', 'sunna@gmail.com', 'Sunna Kristín')," +
+                "('password123', 'jonas@gmail.com', 'Jónas Bjarki');";
 
         String insertHotels = "INSERT INTO hotels (name, location, description) VALUES " +
                 "('Grand Hotel', 'Reykjavik, Iceland', 'A sophisticated hotel is equipped with all you need for your stay in Reykjavík')," +

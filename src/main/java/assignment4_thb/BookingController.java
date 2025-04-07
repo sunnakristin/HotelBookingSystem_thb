@@ -15,6 +15,7 @@ public class BookingController {
     @FXML private TextField expiryYear;
     @FXML private Button backButton;
     @FXML private Label paymentInfo;
+    @FXML private SearchController searchController;
 
     private Booking booking;
 
@@ -34,6 +35,10 @@ public class BookingController {
 
     public void setBooking(Booking booking) {
         this.booking = booking;
+    }
+
+    public void setSearchController(SearchController searchController) {
+        this.searchController = searchController;
     }
 
     private boolean validCardNr() {
@@ -74,6 +79,7 @@ public class BookingController {
                 String expiryDate = expiryMonth.getText() + "/" + expiryYear.getText();
                 booking.getPayment().setCardInfo(cardNr.getText(), cvc.getText(), expiryDate);
                 paymentInfo.setText(booking.confirmBooking());
+                searchController.onSearchRooms();
                 confirmButton.setDisable(true);
                 cardNr.setDisable(true);
                 cvc.setDisable(true);

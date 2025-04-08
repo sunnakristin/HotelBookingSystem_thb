@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class Booking {
     private final HotelRoom room;
@@ -23,30 +24,25 @@ public class Booking {
         return room;
     }
 
-    public String confirmBooking(){
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {
-            String updateQuery = "UPDATE hotel_rooms SET availability = 0 WHERE room_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
-                pstmt.setInt(1, room.getRoomId());
-                pstmt.executeUpdate();
-            }
+    public String confirmBooking() {
+        try {
+            DatabaseManager.confirmBooking(room.getRoomId());
         } catch (SQLException e) {
-            System.out.println("Error updating room availability: " + e.getMessage());
+            System.out.println("Error booking room: " + e.getMessage());
+            return "Failed to confirm booking due to an error.";
         }
         room.setAvailability(false);
         customer.addBooking(this);
         payment.process();
         return sendConfirmation();
     }
-    public void cancel(){
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {
-            String updateQuery = "UPDATE hotel_rooms SET availability = 1 WHERE room_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
-                pstmt.setInt(1, room.getRoomId());
-                pstmt.executeUpdate();
-            }
+
+
+    public void cancel() {
+        try {
+            DatabaseManager.cancelBooking(room.getRoomId());
         } catch (SQLException e) {
-            System.out.println("Error updating room availability: " + e.getMessage());
+            System.out.println("Error canceling booking: " + e.getMessage());
         }
         room.setAvailability(true);
         customer.removeBooking(this);

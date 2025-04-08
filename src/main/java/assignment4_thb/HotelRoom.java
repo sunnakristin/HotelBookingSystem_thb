@@ -3,12 +3,17 @@ package assignment4_thb;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class HotelRoom {
 
     private final int roomId;
     private final String type;
     private final double price;
     private final int maxGuests;
+    //private LocalDate checkInDate;
+    //private LocalDate checkOutDate;
     private BooleanProperty availability = new SimpleBooleanProperty();
     public HotelRoom(int roomId, String type, double price, int maxGuests) {
         this.roomId = roomId;
@@ -22,6 +27,8 @@ public class HotelRoom {
     public String getType() { return type; }
     public Double getPrice() { return price; }
     public int getMaxGuests() { return maxGuests; }
+    //public LocalDate getCheckInDate() { return checkInDate; }
+    //public LocalDate getCheckOutDate() { return checkOutDate; }
 
     public boolean getAvailability() {
         return availability.get();

@@ -95,6 +95,7 @@ public class BookingController {
         Stage stage = (Stage) paymentInfo.getScene().getWindow();
         stage.sizeToScene();
     }
+    @FXML
     public void back(){
         Stage stage = (Stage) confirmButton.getScene().getWindow();
         stage.close();

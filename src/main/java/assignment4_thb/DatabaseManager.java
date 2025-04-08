@@ -8,17 +8,11 @@ public class DatabaseManager {
     private static final String DB_URL = "jdbc:sqlite:hotel.db";
     private static Connection connection = null;
 
-    // Private constructor to prevent instantiation
     private DatabaseManager() {}
 
-    // Get a single connection instance (singleton pattern)
     public static synchronized Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(DB_URL);
-            // Enable busy timeout to wait for the database to become available
-            //connection.createStatement().execute("PRAGMA busy_timeout = 30000;"); // 30 seconds
-            // Enable WAL mode for better concurrency
-            // connection.createStatement().execute("PRAGMA journal_mode=WAL;");
         }
         return connection;
     }
@@ -159,14 +153,24 @@ public class DatabaseManager {
         }
     }
 
+    public static void confirmBooking(int roomId) throws SQLException {
+        try (Connection conn = getConnection()) {
+            String updateQuery = "UPDATE hotel_rooms SET availability = 0 WHERE room_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+                pstmt.setInt(1, roomId);
+                pstmt.executeUpdate();
+            }
+        }
+    }
+
     // Method to save a booking
-    public void saveBooking(int userId, int roomId, LocalDate checkInDate, LocalDate checkOutDate, int numGuests, double totalPrice) throws SQLException {
+    public static void saveBooking(String userName, int roomId, LocalDate checkInDate, LocalDate checkOutDate, int numGuests, double totalPrice) throws SQLException {
         try (Connection conn = getConnection()) {
             String insertQuery = "INSERT INTO bookings (room_id, user_id, check_in_date, check_out_date, num_guests, total_price, booking_status) " +
                     "VALUES (?, ?, ?, ?, ?, ?, 1)";
             try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
                 pstmt.setInt(1, roomId);
-                pstmt.setInt(2, userId);
+                pstmt.setString(2, userName);
                 pstmt.setString(3, checkInDate.toString());
                 pstmt.setString(4, checkOutDate.toString());
                 pstmt.setInt(5, numGuests);
@@ -177,11 +181,11 @@ public class DatabaseManager {
     }
 
     // Method to cancel a booking (update booking_status to 0)
-    public void cancelBooking(int bookingId) throws SQLException {
+    public static void cancelBooking(int roomId) throws SQLException {
         try (Connection conn = getConnection()) {
-            String updateQuery = "UPDATE bookings SET booking_status = 0 WHERE booking_id = ?";
+            String updateQuery = "UPDATE hotel_rooms SET availability = 1 WHERE room_id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
-                pstmt.setInt(1, bookingId);
+                pstmt.setInt(1, roomId);
                 pstmt.executeUpdate();
             }
         }

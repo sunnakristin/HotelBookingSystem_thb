@@ -1,30 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-
-<VBox alignment="CENTER" prefWidth="1000" prefHeight="1000" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment4_thb.SearchController">
+<VBox alignment="CENTER" prefHeight="850" prefWidth="1000" spacing="20.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment4_thb.SearchController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
-    <HBox alignment="CENTER_LEFT" spacing="10.0">
+    <HBox alignment="CENTER_LEFT" prefHeight="11.0" prefWidth="960.0" spacing="10.0">
         <Label fx:id="welcomeLabel" style="-fx-font-size: 18px;" text="Welcome, User 1" />
         <Region HBox.hgrow="ALWAYS" />
-      <Button fx:id="logOutButton" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Log out" textAlignment="RIGHT" onAction="#handleLogout">
+      <Button fx:id="logOutButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleLogout" text="Log out" textAlignment="RIGHT">
          <HBox.margin>
             <Insets left="400.0" />
          </HBox.margin>
@@ -38,7 +26,7 @@
             <Button fx:id="searchButton" onAction="#onSearch" text="Leita" />
         </HBox>
 
-        <TableView fx:id="hotelTable" minHeight="70.0" VBox.vgrow="ALWAYS">
+        <TableView fx:id="hotelTable" minHeight="70.0" prefHeight="300.0" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="nameColumn" prefWidth="200" text="Hotel Name" />
                 <TableColumn fx:id="locationColumn" prefWidth="200" text="Location" />
@@ -46,10 +34,10 @@
             </columns>
         </TableView>
 
-        <VBox fx:id="hotelDetailsContainer" spacing="10.0" style="-fx-background-color: #f5f5f5; -fx-padding: 15;">
+        <VBox fx:id="hotelDetailsContainer" prefHeight="533.0" prefWidth="960.0" spacing="10.0" style="-fx-background-color: #f5f5f5; -fx-padding: 15;">
             <Label fx:id="selectedHotelLabel" style="-fx-font-size: 20px;" text="Hotel Details" />
 
-            <GridPane hgap="10" vgap="10">
+            <GridPane hgap="10" prefHeight="61.0" prefWidth="930.0" vgap="10">
                 <Label text="Room Type:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                 <ComboBox fx:id="roomTypeComboBox" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
@@ -77,21 +65,25 @@
                 <Button fx:id="searchRoomsButton" onAction="#onSearchRooms" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Search Available Rooms" />
             </HBox>
 
-            <TableView fx:id="availableRoomsTable" minHeight="70.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="availableRoomsTable" prefHeight="70.0" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="roomTypeColumn" prefWidth="100" text="Room Type" />
                     <TableColumn fx:id="priceColumn" prefWidth="100" text="Price" />
                     <TableColumn fx:id="maxGuestsColumn" prefWidth="100" text="Max Guests" />
                     <TableColumn fx:id="bookColumn" prefWidth="100" text="Action" />
                 </columns>
+            <columnResizePolicy>
+               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
             </TableView>
         </VBox>
     </VBox>
 
     <VBox spacing="10.0">
-        <Label style="-fx-font-size: 24px;" text="My Bookings" />
+        <Label style="-fx-font-size: 20px;" text="My Bookings">
+        </Label>
 
-        <TableView fx:id="bookingsTable" minHeight="70.0" VBox.vgrow="ALWAYS">
+        <TableView fx:id="bookingsTable" minHeight="70.0" prefHeight="110.0" prefWidth="960.0" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="hotelNameColumn" prefWidth="150" text="Hotel" />
                 <TableColumn fx:id="typeColumn" prefWidth="100" text="Room Type" />

@@ -294,7 +294,10 @@ public class SearchController {
                                 rs.getInt("room_id"),
                                 rs.getString("type"),
                                 rs.getDouble("price"),
-                                rs.getInt("number_of_guests"));
+                                rs.getInt("number_of_guests")
+                                //, rs.getDate("checkin_date").toLocalDate(),
+                                //rs.getDate("checkout_date").toLocalDate()
+                                );
                         availableRooms.add(room);
                     }
                     System.out.println("Found " + availableRooms.size() + " rooms for hotel " + hotelId + ", type " + roomType + ", guests " + (guests != null ? guests : "any"));

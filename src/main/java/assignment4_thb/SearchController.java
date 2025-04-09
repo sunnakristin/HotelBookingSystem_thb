@@ -112,10 +112,6 @@ public class SearchController {
         priceColumnBooking.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getTotalPrice()).asObject());
         checkInDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCheckInDate().toString()));
         checkOutDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCheckOutDate().toString()));
-  //      checkInDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty("foo"));
-  //      checkOutDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty("bar"));
-
-        //checkInDateColumn.setCellValueFactory();
 
         hotelDetailsContainer.setVisible(false);
         hotelTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -201,15 +197,6 @@ public class SearchController {
         bookingsTable.setItems(currentCustomer.getBookings());
     }
 
-    /*public void cancelBooking(BookingInfo booking) throws IOException{
-        //  remove item from database
-        // todo: DatabaseManager.DeleteBooking(booking.getBookingId());
-
-        // update UI
-        currentCustomer.getBookings().remove(booking);
-        updateBookings();
-        onSearchRooms();
-    }*/
     public void cancelBooking(BookingInfo booking) {
         try {
             // Remove booking from the database
@@ -219,14 +206,16 @@ public class SearchController {
             currentCustomer.getBookings().remove(booking);
             updateBookings();
             onSearchRooms();
-
+            showAlert("Booking Cancellation", "Booking has been successfully cancelled.", Alert.AlertType.INFORMATION);
             // Optionally, confirm deletion to the user
             System.out.println("Booking cancelled successfully.");
         } catch (SQLException e) {
             System.out.println("Failed to cancel booking: " + e.getMessage());
+            showAlert("Booking Cancellation", "Failed to cancel booking: " + e.getMessage(), Alert.AlertType.ERROR);
             // Optionally, handle UI notification about failure
         } catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());
+            showAlert("Unexpected Error", "An error occurred: " + e.getMessage(), Alert.AlertType.ERROR);
             // General exception handling, e.g., potential null pointers or IO issues
         }
     }
@@ -342,18 +331,12 @@ public class SearchController {
                         String type = rs.getString("type");
                         double price = rs.getDouble("price");
                         int maxGuests = rs.getInt("number_of_guests");
-                      //  Date checkIn = rs.getDate("check_in_date");
-                      //  Date checkOut = rs.getDate("check_out_date");
-                      //  LocalDate checkIn_Date = (checkIn != null) ? checkIn.toLocalDate() : null;
-                      //  LocalDate checkOut_Date = (checkOut != null) ? checkOut.toLocalDate() : null;
 
                         HotelRoom room = new HotelRoom(
                                 roomId,
                                 type,
                                 price,
                                 maxGuests
-                        //        checkIn_Date,
-                        //        checkOut_Date
                         );
                         availableRooms.add(room);
                     }
@@ -366,9 +349,16 @@ public class SearchController {
         return availableRooms;
     }
 
-    // skoða, þarf að tengjast við bókun
     public void setCurrentCustomer(Customer customer) {
         this.currentCustomer = customer;
         welcomeLabel.setText("Welcome, " + customer.getName());
+    }
+
+    private void showAlert(String title, String content, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

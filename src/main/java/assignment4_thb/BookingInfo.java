@@ -20,8 +20,8 @@ public class BookingInfo {
         this.roomType = roomType;
         this.location = location;
         this.numGuests = numGuests;
-        this.totalPrice = ChronoUnit.DAYS.between(checkInDate, checkOutDate) * totalPrice;
-        //this.totalPrice = totalPrice;
+        //this.totalPrice = ChronoUnit.DAYS.between(checkInDate, checkOutDate) * totalPrice;
+        this.totalPrice = totalPrice;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
     }

@@ -8,7 +8,7 @@ public class BookingInfo {
     private final String roomType;
     private final String location;
     private final int numGuests;
-    private final double totalPrice;
+    private double totalPrice;
     private final LocalDate checkInDate;
     private final LocalDate checkOutDate;
 
@@ -45,6 +45,7 @@ public class BookingInfo {
     }
 
     public double getTotalPrice() {
+        totalPrice = (checkOutDate.getDayOfYear()-checkInDate.getDayOfYear())*totalPrice;
         return totalPrice;
     }
 

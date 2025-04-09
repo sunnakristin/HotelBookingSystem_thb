@@ -65,7 +65,7 @@ public class SearchController {
                 if (empty || price == null) {
                     setText(null);
                 } else {
-                    setText(String.format("%.1f $", price)); //setja $ merki fyrir aftan
+                    setText(String.format("%.1f $ per night", price)); //setja $ merki fyrir aftan
                 }
             }
         });

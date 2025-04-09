@@ -185,7 +185,7 @@ public class DatabaseManager {
         return bookingId;
     }
 
-    public static List<BookingInfo> LoadBookings(int hotelId, int userId) {
+    public static List<BookingInfo> LoadBookings(int userId) {
         List<BookingInfo> bookings = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {
             String query =

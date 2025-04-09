@@ -145,7 +145,7 @@ public class SearchController {
     }
 
     private void loadBookingsForHotel(int hotelId) {
-        List<BookingInfo> bookings = DatabaseManager.LoadBookings(hotelId, currentCustomer.getUserId());
+        List<BookingInfo> bookings = DatabaseManager.LoadBookings(currentCustomer.getUserId());
         bookingsTable.setItems(FXCollections.observableArrayList(bookings));
 
     }
@@ -351,6 +351,14 @@ public class SearchController {
     public void setCurrentCustomer(Customer customer) {
         this.currentCustomer = customer;
         welcomeLabel.setText("Welcome, " + customer.getName());
+        loadUserBookings();
+    }
+
+    private void loadUserBookings() {
+        if (currentCustomer != null) {
+            List<BookingInfo> bookings = DatabaseManager.LoadBookings(currentCustomer.getUserId());
+            bookingsTable.setItems(FXCollections.observableArrayList(bookings));
+        }
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {

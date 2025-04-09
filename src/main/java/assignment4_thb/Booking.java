@@ -13,6 +13,7 @@ public class Booking {
     private final Hotel hotel;
     private final LocalDate checkInDate;
     private final LocalDate checkOutDate;
+    private double totalPrice;
 
 
     public Booking(Customer customer, Hotel hotel, HotelRoom room, LocalDate checkInDate, LocalDate checkOutDate) {
@@ -22,6 +23,12 @@ public class Booking {
         payment = new Payment(this);
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
+        calculateTotalPrice();//chat
+    }
+
+    private void calculateTotalPrice() {
+        long nights = java.time.temporal.ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+        this.totalPrice = nights * room.getPrice();
     }
 
     public HotelRoom getRoom() {
@@ -38,8 +45,13 @@ public class Booking {
 //
         customer.addBooking(this);
         payment.process();
-        DatabaseManager.saveBooking(this.customer.getUserId(), room.getRoomId(), checkInDate, checkOutDate, room.getMaxGuests(), room.getPrice());
+        //int bookingId = DatabaseManager.saveBooking(this.customer.getUserId(), room.getRoomId(), checkInDate, checkOutDate, room.getMaxGuests(), room.getPrice());
+        //DatabaseManager.saveBooking(this.customer.getUserId(), room.getRoomId(), checkInDate, checkOutDate, room.getMaxGuests(), room.getPrice());
         return sendConfirmation();
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
 

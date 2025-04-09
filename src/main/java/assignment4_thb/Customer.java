@@ -3,6 +3,8 @@ package assignment4_thb;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.SQLException;
+
 public class Customer {
     private int userId;
     private String name;
@@ -10,8 +12,9 @@ public class Customer {
     private String password;
     private ObservableList<BookingInfo> bookings;
 
-    public void addBooking(Booking booking){
-        int bookingId = 9; // todo: this should be loaded from the DB after saving
+    public void addBooking(Booking booking) throws SQLException {
+        //int bookingId = 9; // todo: this should be loaded from the DB after saving
+        int bookingId = DatabaseManager.saveBooking(this.userId, booking.getRoom().getRoomId(), booking.getCheckInDate(), booking.getCheckOutDate(), booking.getRoom().getMaxGuests(), booking.getTotalPrice());
         bookings.add(
             new BookingInfo(bookingId, booking.getHotel().getName(), booking.getRoom().getType(), booking.getHotel().getLocation(),
                  booking.getRoom().getMaxGuests(), booking.getRoom().getPrice(), booking.getCheckInDate(), booking.getCheckOutDate()));

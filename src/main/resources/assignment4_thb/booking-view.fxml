@@ -24,6 +24,18 @@
          <Label prefWidth="100.0" style="-fx-font-weight: bold;" text="Price:" />
          <Label fx:id="priceLabel" prefWidth="400.0" text="Price" />
       </HBox>
+      <HBox prefHeight="17.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="17.0" prefWidth="109.0" style="-fx-font-weight: bold;" text="Check-In Date: " />
+            <Label fx:id="checkInLabel" text="Check-In" />
+         </children>
+      </HBox>
+      <HBox  prefHeight="17.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="17.0" prefWidth="109.0" style="-fx-font-weight: bold;" text="Check-In Date: " />
+            <Label fx:id="checkOutLabel" text="Check-Out" />
+         </children>
+      </HBox>
    </VBox>
 
    <!-- Payment Information Section -->

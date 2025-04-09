@@ -1,7 +1,5 @@
 package assignment4_thb;
 
-import javafx.collections.FXCollections;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -65,9 +63,6 @@ public class DatabaseManager {
                 "type TEXT NOT NULL," +
                 "price REAL NOT NULL," +
                 "number_of_guests INTEGER NOT NULL," +
-//                "check_in_date TEXT," +
-//                "check_out_date TEXT," +
-//                "availability INTEGER NOT NULL DEFAULT 1," +
                 "FOREIGN KEY (hotel_id) REFERENCES hotels(hotel_id)" +
                 ");";
 
@@ -165,16 +160,6 @@ public class DatabaseManager {
         return true;
     }
 
-//    public static void confirmBooking(int roomId) throws SQLException {
-//        try (Connection conn = getConnection()) {
-//            String updateQuery = "UPDATE hotel_rooms SET availability = 0 WHERE room_id = ?";
-//            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
-//                pstmt.setInt(1, roomId);
-//                pstmt.executeUpdate();
-//            }
-//        }
-//    }
-
     // Method to save a booking
     public static int saveBooking(int userId, int roomId, LocalDate checkInDate, LocalDate checkOutDate, int numGuests, double totalPrice) throws SQLException {
         int bookingId = 0;
@@ -227,10 +212,7 @@ public class DatabaseManager {
                         ));
                     }
                 }
-            } finally {
-
             }
-
         } catch (SQLException e) {
             System.out.println("Error loading hotels: " + e.getMessage());
         }
@@ -239,17 +221,6 @@ public class DatabaseManager {
         return bookings;
     }
 
-
-    // Method to cancel a booking (update booking_status to 0)
-//    public static void cancelBooking(int roomId) throws SQLException {
-//        try (Connection conn = getConnection()) {
-//            String updateQuery = "UPDATE hotel_rooms SET availability = 1 WHERE room_id = ?";
-//            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
-//                pstmt.setInt(1, roomId);
-//                pstmt.executeUpdate();
-//            }
-//        }
-//    }
     public static void DeleteBooking(int bookingId) throws SQLException {
         try (Connection conn = getConnection()) {
             String deleteQuery = "DELETE FROM bookings WHERE booking_id = ?";

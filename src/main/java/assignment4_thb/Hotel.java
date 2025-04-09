@@ -29,13 +29,6 @@ public class Hotel {
         return location;
     }
 
-    public List<HotelRoom> getRooms() {
-        return rooms;
-    }
-
-    public void setRooms(List<HotelRoom> rooms) {
-        this.rooms = rooms;
-    }
     public String getDescription() {
         return description;
     }

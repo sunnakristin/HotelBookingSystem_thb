@@ -13,7 +13,7 @@ public class Customer {
     private ObservableList<BookingInfo> bookings;
 
     public void addBooking(Booking booking) throws SQLException {
-        // todo: this should be loaded from the DB after saving
+        // this should be loaded from the DB after saving
         int bookingId = DatabaseManager.saveBooking(this.userId, booking.getRoom().getRoomId(), booking.getCheckInDate(), booking.getCheckOutDate(), booking.getRoom().getMaxGuests(), booking.getTotalPrice());
         bookings.add(
             new BookingInfo(bookingId, booking.getHotel().getName(), booking.getRoom().getType(), booking.getHotel().getLocation(),
@@ -24,9 +24,6 @@ public class Customer {
         return bookings;
     }
 
-    public void removeBooking(BookingInfo booking){
-        bookings.remove(booking);
-    }
     public Customer(int userId, String name, String email, String password) {
         this.userId = userId;
         this.name = name;

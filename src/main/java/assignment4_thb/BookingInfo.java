@@ -1,7 +1,6 @@
 package assignment4_thb;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 public class BookingInfo {
     private final int bookingId;
@@ -20,7 +19,6 @@ public class BookingInfo {
         this.roomType = roomType;
         this.location = location;
         this.numGuests = numGuests;
-        //this.totalPrice = ChronoUnit.DAYS.between(checkInDate, checkOutDate) * totalPrice;
         this.totalPrice = totalPrice;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;

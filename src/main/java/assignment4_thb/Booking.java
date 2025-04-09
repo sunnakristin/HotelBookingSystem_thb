@@ -1,11 +1,7 @@
 package assignment4_thb;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 public class Booking {
     private final HotelRoom room;
@@ -24,7 +20,7 @@ public class Booking {
         payment = new Payment(this);
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        calculateTotalPrice();//chat
+        calculateTotalPrice();
     }
 
     private void calculateTotalPrice() {

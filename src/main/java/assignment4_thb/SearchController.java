@@ -8,12 +8,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.*;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +33,6 @@ public class SearchController {
     @FXML private TableColumn<HotelRoom, Double> priceColumn;
     @FXML private TableColumn<HotelRoom, Integer> maxGuestsColumn;
     @FXML private TableColumn<HotelRoom, Void> bookColumn;
-    @FXML private Label hotelNameLabel;
     @FXML private TableView<BookingInfo> bookingsTable;
     @FXML private TableColumn<BookingInfo, String> hotelNameColumn;
     @FXML private TableColumn<BookingInfo, String> typeColumn;
@@ -174,7 +171,6 @@ public class SearchController {
         List<HotelRoom> availableRooms = searchAvailableRooms(selectedHotel.getHotelId(), roomType, guests, checkInDate, checkOutDate);
         ObservableList<HotelRoom> observableRooms = FXCollections.observableArrayList(availableRooms);
         availableRoomsTable.setItems(observableRooms);
-
         System.out.println("Displayed " + availableRooms.size() + " rooms for hotel " + selectedHotel.getName());
     }
 
@@ -209,16 +205,10 @@ public class SearchController {
             updateBookings();
             onSearchRooms();
             showAlert("Booking Cancellation", "Booking has been successfully cancelled.", Alert.AlertType.INFORMATION);
-            // Optionally, confirm deletion to the user
-            System.out.println("Booking cancelled successfully.");
         } catch (SQLException e) {
-            System.out.println("Failed to cancel booking: " + e.getMessage());
             showAlert("Booking Cancellation", "Failed to cancel booking: " + e.getMessage(), Alert.AlertType.ERROR);
-            // Optionally, handle UI notification about failure
         } catch (Exception e) {
-            System.out.println("An error occurred: " + e.getMessage());
             showAlert("Unexpected Error", "An error occurred: " + e.getMessage(), Alert.AlertType.ERROR);
-            // General exception handling, e.g., potential null pointers or IO issues
         }
     }
 
@@ -274,7 +264,7 @@ public class SearchController {
             System.out.println("Error loading hotels: " + e.getMessage());
         }
         hotelTable.setItems(FXCollections.observableArrayList(hotels));
-        System.out.println("Loaded " + hotels.size() + " hotels from the database."); //sjá hversu mörg hótel eru sett í db
+        System.out.println("Loaded " + hotels.size() + " hotels from the database."); //see how many hotels are put in hotels.db
     }
 
     private void loadRoomTypesForHotel(int hotelId) {
@@ -296,7 +286,6 @@ public class SearchController {
         }
     }
 
-    //er ekkert að leita eftir dögum svo taka út?
     private List<HotelRoom> searchAvailableRooms(int hotelId, String roomType, Integer guests, LocalDate checkInDate, LocalDate checkOutDate) {
         List<HotelRoom> availableRooms = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {

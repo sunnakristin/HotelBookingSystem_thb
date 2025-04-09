@@ -91,7 +91,8 @@ public class BookingController {
                     cvc.setDisable(true);
                     expiryMonth.setDisable(true);
                     expiryYear.setDisable(true);
-                    // update search
+
+                    // Update search
                     searchController.onSearchRooms();
                     searchController.updateBookings();
                 } else {

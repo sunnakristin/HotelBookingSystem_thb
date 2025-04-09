@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +36,15 @@ public class SearchController {
     @FXML private TableColumn<HotelRoom, Integer> maxGuestsColumn;
     @FXML private TableColumn<HotelRoom, Void> bookColumn;
     @FXML private Label hotelNameLabel;
-    @FXML private TableColumn<Booking, String> hotelNameColumn;
-    @FXML private TableColumn<Booking, String> typeColumn;
-    @FXML private TableColumn<Booking, String> hotelLocationColumn;
-    @FXML private TableColumn<Booking, Integer> guestsColumn;
-    @FXML private TableColumn<Booking, Double> priceColumnBooking;
-    @FXML private TableView<Booking> bookingsTable;
-    @FXML private TableColumn<Booking, Void> cancelColumn;
+    @FXML private TableView<BookingInfo> bookingsTable;
+    @FXML private TableColumn<BookingInfo, String> hotelNameColumn;
+    @FXML private TableColumn<BookingInfo, String> typeColumn;
+    @FXML private TableColumn<BookingInfo, String> hotelLocationColumn;
+    @FXML private TableColumn<BookingInfo, Integer> guestsColumn;
+    @FXML private TableColumn<BookingInfo, Double> priceColumnBooking;
+    @FXML private TableColumn<BookingInfo, String> checkInDateColumn;
+    @FXML private TableColumn<BookingInfo, String> checkOutDateColumn;
+    @FXML private TableColumn<BookingInfo, Void> cancelColumn;
     @FXML private Label welcomeLabel;
     @FXML private Button logOutButton;
 
@@ -105,11 +108,19 @@ public class SearchController {
             }
         });
 
-        hotelNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHotel().getName()));
-        typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRoom().getType()));
-        hotelLocationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHotel().getLocation()));
-        guestsColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getRoom().getMaxGuests()).asObject());
-        priceColumnBooking.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getRoom().getPrice()).asObject());
+        // búa til dálka í Bókunarlista
+        hotelNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHotelName()));
+        typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRoomType()));
+        hotelLocationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLocation()));
+        guestsColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getNumGuests()).asObject());
+        priceColumnBooking.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getTotalPrice()).asObject());
+        checkInDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCheckInDate().toString()));
+        checkOutDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCheckOutDate().toString()));
+  //      checkInDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty("foo"));
+  //      checkOutDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty("bar"));
+
+        //checkInDateColumn.setCellValueFactory();
+
         hotelDetailsContainer.setVisible(false);
         hotelTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -118,6 +129,7 @@ public class SearchController {
                 hotelDetailsContainer.setVisible(true);
                 loadRoomTypesForHotel(newSelection.getHotelId());
                 onSearchRooms();
+                loadBookingsForHotel(selectedHotel.getHotelId());
             } else {
                 hotelDetailsContainer.setVisible(false);
             }
@@ -131,6 +143,12 @@ public class SearchController {
         checkOutDatePicker.setValue(LocalDate.now().plusDays(2));
 
         loadHotelsFromDatabase("");
+    }
+
+    private void loadBookingsForHotel(int hotelId) {
+        List<BookingInfo> bookings = DatabaseManager.LoadBookings(hotelId, currentCustomer.getUserId());
+        bookingsTable.setItems(FXCollections.observableArrayList(bookings));
+
     }
 
     @FXML
@@ -172,7 +190,7 @@ public class SearchController {
         Parent bookingView = loader.load();
         BookingController controller = loader.getController();
         controller.setSearchController(this);
-        Booking booking = new Booking(currentCustomer, selectedHotel, room); // Búm til nýja bókun, hér þarf að tengja það saman
+        Booking booking = new Booking(currentCustomer, selectedHotel, room, checkInDatePicker.getValue(),checkOutDatePicker.getValue()); // Búm til nýja bókun, hér þarf að tengja það saman
         controller.setBooking(booking);
         controller.initialize();
 
@@ -187,8 +205,12 @@ public class SearchController {
         bookingsTable.setItems(currentCustomer.getBookings());
     }
 
-    public void cancelBooking(Booking booking) throws IOException{
-        booking.cancel();
+    public void cancelBooking(BookingInfo booking) throws IOException{
+        //  remove item from database
+        // todo: DatabaseManager.DeleteBooking(booking.getBookingId());
+
+        // update UI
+        currentCustomer.getBookings().remove(booking);
         updateBookings();
         onSearchRooms();
     }
@@ -249,7 +271,7 @@ public class SearchController {
 
     private void loadRoomTypesForHotel(int hotelId) {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {
-            String query = "SELECT DISTINCT type FROM hotel_rooms WHERE hotel_id = ? AND availability = 1";
+            String query = "SELECT DISTINCT type FROM hotel_rooms WHERE hotel_id = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                 pstmt.setInt(1, hotelId);
                 try (ResultSet rs = pstmt.executeQuery()) {
@@ -270,17 +292,26 @@ public class SearchController {
     private List<HotelRoom> searchAvailableRooms(int hotelId, String roomType, Integer guests, LocalDate checkInDate, LocalDate checkOutDate) {
         List<HotelRoom> availableRooms = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {
-            StringBuilder query = new StringBuilder("SELECT room_id, type, price, number_of_guests FROM hotel_rooms WHERE hotel_id = ? AND availability = 1");
+            StringBuilder query = new StringBuilder(
+                    "SELECT room_id, type, price, number_of_guests " +
+                    "  FROM hotel_rooms" +
+                    " WHERE hotel_id = ? " +
+                    "   AND not exists (select b.booking_id from bookings b " +
+                    "                    where b.room_id = hotel_rooms.room_id " +
+                    "                      and b.check_in_date < ? " +
+                    "                      and b.check_out_date > ?)");
             if (!"Any".equals(roomType)) {
                 query.append(" AND type = ?");
             }
             if (guests != null) {
                 query.append(" AND number_of_guests = ?");
             }
-
+           // System.out.println(query.toString());
             try (PreparedStatement pstmt = conn.prepareStatement(query.toString())) {
-                int paramIndex = 1;
-                pstmt.setInt(paramIndex++, hotelId);
+                pstmt.setInt(1, hotelId);
+                pstmt.setDate(2, Date.valueOf(checkOutDate));
+                pstmt.setDate(3, Date.valueOf(checkInDate));
+                int paramIndex = 4;
                 if (!"Any".equals(roomType)) {
                     pstmt.setString(paramIndex++, roomType);
                 }
@@ -290,14 +321,23 @@ public class SearchController {
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
+                        int roomId = rs.getInt("room_id");
+                        String type = rs.getString("type");
+                        double price = rs.getDouble("price");
+                        int maxGuests = rs.getInt("number_of_guests");
+                      //  Date checkIn = rs.getDate("check_in_date");
+                      //  Date checkOut = rs.getDate("check_out_date");
+                      //  LocalDate checkIn_Date = (checkIn != null) ? checkIn.toLocalDate() : null;
+                      //  LocalDate checkOut_Date = (checkOut != null) ? checkOut.toLocalDate() : null;
+
                         HotelRoom room = new HotelRoom(
-                                rs.getInt("room_id"),
-                                rs.getString("type"),
-                                rs.getDouble("price"),
-                                rs.getInt("number_of_guests")
-                                //, rs.getDate("checkin_date").toLocalDate(),
-                                //rs.getDate("checkout_date").toLocalDate()
-                                );
+                                roomId,
+                                type,
+                                price,
+                                maxGuests
+                        //        checkIn_Date,
+                        //        checkOut_Date
+                        );
                         availableRooms.add(room);
                     }
                     System.out.println("Found " + availableRooms.size() + " rooms for hotel " + hotelId + ", type " + roomType + ", guests " + (guests != null ? guests : "any"));

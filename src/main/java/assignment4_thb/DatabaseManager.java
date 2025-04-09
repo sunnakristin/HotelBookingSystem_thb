@@ -1,7 +1,11 @@
 package assignment4_thb;
 
+import javafx.collections.FXCollections;
+
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class DatabaseManager {
@@ -61,7 +65,9 @@ public class DatabaseManager {
                 "type TEXT NOT NULL," +
                 "price REAL NOT NULL," +
                 "number_of_guests INTEGER NOT NULL," +
-                "availability INTEGER NOT NULL DEFAULT 1," +
+//                "check_in_date TEXT," +
+//                "check_out_date TEXT," +
+//                "availability INTEGER NOT NULL DEFAULT 1," +
                 "FOREIGN KEY (hotel_id) REFERENCES hotels(hotel_id)" +
                 ");";
 
@@ -114,25 +120,25 @@ public class DatabaseManager {
                 "('Fosshótel', 'Húsavík, Iceland', 'Fosshotel Húsavík is a gem in this quaint northern Icelandic harbor town')," +
                 "('EDITION', 'Reykjavík, Iceland', '5 star hotel in the center of Reykjavík');";
 
-        String insertRooms = "INSERT INTO hotel_rooms (hotel_id, type, price, number_of_guests, availability) VALUES " +
-                "(1, 'Standard', 100.00, 1, 1)," +
-                "(1, 'Deluxe', 200.00, 2, 1)," +
-                "(1, 'Suite', 300.00, 3, 1)," +
-                "(2, 'Standard', 230.00, 3, 1)," +
-                "(2, 'Deluxe', 180.00, 4, 1)," +
-                "(2, 'Suite', 270.00, 6, 1)," +
-                "(3, 'Standard', 120.00, 3, 1)," +
-                "(3, 'Deluxe', 240.00, 1, 1)," +
-                "(3, 'Suite', 360.00, 2, 1)," +
-                "(4, 'Standard', 80.00, 19, 1)," +
-                "(4, 'Deluxe', 300.00, 4, 1)," +
-                "(4, 'Suite', 450.00, 6, 1)," +
-                "(5, 'Standard', 120.00, 2, 1)," +
-                "(5, 'Deluxe', 240.00, 4, 1)," +
-                "(6, 'Standard', 360.00, 3, 1)," +
-                "(6, 'Standard', 400.00, 4, 1)," +
-                "(7, 'Deluxe', 550.00, 5, 1)," +
-                "(7, 'Suite', 700.00, 10, 1);";
+        String insertRooms = "INSERT INTO hotel_rooms (hotel_id, type, price, number_of_guests) VALUES " +
+                "(1, 'Standard', 100.00, 1)," +
+                "(1, 'Deluxe', 200.00, 2)," +
+                "(1, 'Suite', 300.00, 3)," +
+                "(2, 'Standard', 230.00, 3)," +
+                "(2, 'Deluxe', 180.00, 4)," +
+                "(2, 'Suite', 270.00, 6)," +
+                "(3, 'Standard', 120.00, 3)," +
+                "(3, 'Deluxe', 240.00, 1)," +
+                "(3, 'Suite', 360.00, 2)," +
+                "(4, 'Standard', 80.00, 19)," +
+                "(4, 'Deluxe', 300.00, 4)," +
+                "(4, 'Suite', 450.00, 6)," +
+                "(5, 'Standard', 120.00, 2)," +
+                "(5, 'Deluxe', 240.00, 4)," +
+                "(6, 'Standard', 360.00, 3)," +
+                "(6, 'Standard', 400.00, 4)," +
+                "(7, 'Deluxe', 550.00, 5)," +
+                "(7, 'Suite', 700.00, 10);";
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(insertUsers);
@@ -142,37 +148,43 @@ public class DatabaseManager {
     }
 
     // Method to update room availability
-    public void updateRoomAvailability(int roomId, boolean availability) throws SQLException {
+    public static boolean checkRoomAvailability(int roomId, LocalDate day) throws SQLException {
         try (Connection conn = getConnection()) {
-            String updateQuery = "UPDATE hotel_rooms SET availability = ? WHERE room_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
-                pstmt.setInt(1, availability ? 1 : 0);
-                pstmt.setInt(2, roomId);
-                pstmt.executeUpdate();
+            String qry = "select b.booking_id from bookings b " +
+                    "where b.room_id = ? and b.check_in_date < ? and b.check_out_date > ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(qry)) {
+                pstmt.setInt(1, roomId);
+                pstmt.setDate(2, Date.valueOf(day));
+                pstmt.setDate(3, Date.valueOf(day));
+                var res = pstmt.executeQuery();
+                if (res.next()) {
+                    return false;
+                }
             }
         }
+        return true;
     }
 
-    public static void confirmBooking(int roomId) throws SQLException {
-        try (Connection conn = getConnection()) {
-            String updateQuery = "UPDATE hotel_rooms SET availability = 0 WHERE room_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
-                pstmt.setInt(1, roomId);
-                pstmt.executeUpdate();
-            }
-        }
-    }
+//    public static void confirmBooking(int roomId) throws SQLException {
+//        try (Connection conn = getConnection()) {
+//            String updateQuery = "UPDATE hotel_rooms SET availability = 0 WHERE room_id = ?";
+//            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+//                pstmt.setInt(1, roomId);
+//                pstmt.executeUpdate();
+//            }
+//        }
+//    }
 
     // Method to save a booking
-    public static void saveBooking(String userName, int roomId, LocalDate checkInDate, LocalDate checkOutDate, int numGuests, double totalPrice) throws SQLException {
+    public static void saveBooking(int userId, int roomId, LocalDate checkInDate, LocalDate checkOutDate, int numGuests, double totalPrice) throws SQLException {
         try (Connection conn = getConnection()) {
             String insertQuery = "INSERT INTO bookings (room_id, user_id, check_in_date, check_out_date, num_guests, total_price, booking_status) " +
                     "VALUES (?, ?, ?, ?, ?, ?, 1)";
             try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
                 pstmt.setInt(1, roomId);
-                pstmt.setString(2, userName);
-                pstmt.setString(3, checkInDate.toString());
-                pstmt.setString(4, checkOutDate.toString());
+                pstmt.setInt(2, userId);
+                pstmt.setDate(3, Date.valueOf(checkInDate));
+                pstmt.setDate(4, Date.valueOf(checkOutDate));
                 pstmt.setInt(5, numGuests);
                 pstmt.setDouble(6, totalPrice);
                 pstmt.executeUpdate();
@@ -180,14 +192,55 @@ public class DatabaseManager {
         }
     }
 
-    // Method to cancel a booking (update booking_status to 0)
-    public static void cancelBooking(int roomId) throws SQLException {
-        try (Connection conn = getConnection()) {
-            String updateQuery = "UPDATE hotel_rooms SET availability = 1 WHERE room_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
-                pstmt.setInt(1, roomId);
-                pstmt.executeUpdate();
+    public static List<BookingInfo> LoadBookings(int hotelId, int userId) {
+        List<BookingInfo> bookings = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {
+            String query =
+                    "select b.booking_id, h.name as hotel_name, r.type as room_type, h.location, b.num_guests, b.total_price, b.check_in_date, b.check_out_date " +
+                            "  from bookings b " +
+                            "  join hotel_rooms r on r.room_id=b.room_id" +
+                            "  join hotels h on h.hotel_id=r.hotel_id" +
+                            "  join users u on u.user_id=b.user_id" +
+                            " where r.hotel_id = ? and b.user_id = ?";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setInt(1, hotelId);
+                pstmt.setInt(2, userId);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        bookings.add(new BookingInfo(
+                                rs.getInt("booking_id"),
+                                rs.getString("hotel_name"),
+                                rs.getString("room_type"),
+                                rs.getString("location"),
+                                rs.getInt("num_guests"),
+                                rs.getDouble("total_price"),
+                                rs.getDate("check_in_date").toLocalDate(),
+                                rs.getDate("check_out_date").toLocalDate()
+                        ));
+                    }
+                }
+            } finally {
+
             }
+
+        } catch (SQLException e) {
+            System.out.println("Error loading hotels: " + e.getMessage());
         }
+
+        System.out.println("Loaded " + bookings.size() + " hotels from the database."); //sjá hversu mörg hótel eru sett í db
+        return bookings;
     }
+
+
+    // Method to cancel a booking (update booking_status to 0)
+//    public static void cancelBooking(int roomId) throws SQLException {
+//        try (Connection conn = getConnection()) {
+//            String updateQuery = "UPDATE hotel_rooms SET availability = 1 WHERE room_id = ?";
+//            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+//                pstmt.setInt(1, roomId);
+//                pstmt.executeUpdate();
+//            }
+//        }
+//    }
 }

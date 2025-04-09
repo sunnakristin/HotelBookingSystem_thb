@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
+
 public class BookingController {
     @FXML private Label hotelLabel;
     @FXML private Label typeLabel;
@@ -73,21 +75,27 @@ public class BookingController {
     }
 
     @FXML
-    public void confirm() {
+    public void confirm()  {
         if (validCardNr() && validCVC() && validExpiryMonth()) {
-            if (booking.getRoom().getAvailability()){
-                String expiryDate = expiryMonth.getText() + "/" + expiryYear.getText();
-                booking.getPayment().setCardInfo(cardNr.getText(), cvc.getText(), expiryDate);
-                paymentInfo.setText(booking.confirmBooking());
-                searchController.onSearchRooms();
-                searchController.updateBookings();
-                confirmButton.setDisable(true);
-                cardNr.setDisable(true);
-                cvc.setDisable(true);
-                expiryMonth.setDisable(true);
-                expiryYear.setDisable(true);
-            }else {
-                paymentInfo.setText("room unavailable");
+            try {
+                if (DatabaseManager.checkRoomAvailability(booking.getRoom().getRoomId(), booking.getCheckInDate())) {
+                    String expiryDate = expiryMonth.getText() + "/" + expiryYear.getText();
+                    booking.getPayment().setCardInfo(cardNr.getText(), cvc.getText(), expiryDate);
+                    paymentInfo.setText(booking.confirmBooking());
+                    confirmButton.setDisable(true);
+                    cardNr.setDisable(true);
+                    cvc.setDisable(true);
+                    expiryMonth.setDisable(true);
+                    expiryYear.setDisable(true);
+                    // update search
+                    searchController.onSearchRooms();
+                    searchController.updateBookings();
+                } else {
+                    paymentInfo.setText("room unavailable");
+                }
+            }
+            catch (SQLException e) {
+                System.out.println(e);
             }
         } else {
             paymentInfo.setText("Please fill out valid card info");

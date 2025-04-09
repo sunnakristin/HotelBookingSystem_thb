@@ -128,8 +128,9 @@ public class CustomerController {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                int userId = rs.getInt("user_id");
                 String userName = rs.getString("name");
-                Customer customer = new Customer(userName, email, password);
+                Customer customer = new Customer(userId, userName, email, password);
 
                 Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 loginStage.close();

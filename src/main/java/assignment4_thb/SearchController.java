@@ -110,6 +110,8 @@ public class SearchController {
         hotelLocationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLocation()));
         guestsColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getNumGuests()).asObject());
         priceColumnBooking.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getTotalPrice()).asObject());
+
+
         checkInDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCheckInDate().toString()));
         checkOutDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCheckOutDate().toString()));
 

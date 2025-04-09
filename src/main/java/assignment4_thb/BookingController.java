@@ -10,6 +10,8 @@ public class BookingController {
     @FXML private Label hotelLabel;
     @FXML private Label typeLabel;
     @FXML private Label priceLabel;
+    @FXML private Label checkInLabel;
+    @FXML private Label checkOutLabel;
     @FXML private Button confirmButton;
     @FXML private TextField cardNr;
     @FXML private TextField cvc;
@@ -31,7 +33,9 @@ public class BookingController {
             backButton.setOnAction(e -> back());
             hotelLabel.setText(booking.getHotel().getName());
             typeLabel.setText(booking.getRoom().getType());
-            priceLabel.setText(String.format("%.2f $", booking.getRoom().getPrice()));
+            priceLabel.setText(String.format("%.1f $", booking.getTotalPrice()));
+            checkInLabel.setText(booking.getCheckInDate().toString());
+            checkOutLabel.setText(booking.getCheckOutDate().toString());
         }
     }
 

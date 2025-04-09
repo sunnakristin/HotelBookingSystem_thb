@@ -93,11 +93,7 @@ public class SearchController {
             private final Button cancelButton = new Button("Cancel");
             {
                 cancelButton.setOnAction(event -> {
-                    try {
-                        cancelBooking(getTableView().getItems().get(getIndex()));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    cancelBooking(getTableView().getItems().get(getIndex()));
                 });
             }
 
@@ -205,7 +201,7 @@ public class SearchController {
         bookingsTable.setItems(currentCustomer.getBookings());
     }
 
-    public void cancelBooking(BookingInfo booking) throws IOException{
+    /*public void cancelBooking(BookingInfo booking) throws IOException{
         //  remove item from database
         // todo: DatabaseManager.DeleteBooking(booking.getBookingId());
 
@@ -213,7 +209,28 @@ public class SearchController {
         currentCustomer.getBookings().remove(booking);
         updateBookings();
         onSearchRooms();
+    }*/
+    public void cancelBooking(BookingInfo booking) {
+        try {
+            // Remove booking from the database
+            DatabaseManager.DeleteBooking(booking.getBookingId());
+
+            // Update UI after successful deletion
+            currentCustomer.getBookings().remove(booking);
+            updateBookings();
+            onSearchRooms();
+
+            // Optionally, confirm deletion to the user
+            System.out.println("Booking cancelled successfully.");
+        } catch (SQLException e) {
+            System.out.println("Failed to cancel booking: " + e.getMessage());
+            // Optionally, handle UI notification about failure
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+            // General exception handling, e.g., potential null pointers or IO issues
+        }
     }
+
 
     @FXML private void onSearch() {
         loadHotelsFromDatabase(searchField.getText().trim().toLowerCase());

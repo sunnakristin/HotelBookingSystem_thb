@@ -250,4 +250,18 @@ public class DatabaseManager {
 //            }
 //        }
 //    }
+    public static void DeleteBooking(int bookingId) throws SQLException {
+        try (Connection conn = getConnection()) {
+            String deleteQuery = "DELETE FROM bookings WHERE booking_id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteQuery)) {
+                pstmt.setInt(1, bookingId);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.out.println("Error deleting booking: " + e.getMessage());
+            throw e;
+        }
+    }
+
+
 }

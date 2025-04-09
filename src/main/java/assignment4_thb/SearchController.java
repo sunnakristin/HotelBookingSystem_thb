@@ -50,11 +50,13 @@ public class SearchController {
 
     @FXML
     public void initialize() {
+        // Set up the table columns to map to the properties of the Hotel and HotelRoom objects
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         roomTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        // Customize the display of the price to include currency symbol and format
         priceColumn.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
@@ -68,6 +70,7 @@ public class SearchController {
         });
         maxGuestsColumn.setCellValueFactory(new PropertyValueFactory<>("maxGuests"));
 
+        // Define the "Book Now" button and its behavior in the table
         bookColumn.setCellFactory(col -> new TableCell<>() {
             private final Button bookButton = new Button("Book Now");
             {
@@ -86,6 +89,8 @@ public class SearchController {
                 setGraphic(empty ? null : bookButton);
             }
         });
+
+        // Define the "Cancel" button and its behavior in the table
         cancelColumn.setCellFactory(col -> new TableCell<>() {
             private final Button cancelButton = new Button("Cancel");
             {
@@ -101,17 +106,18 @@ public class SearchController {
             }
         });
 
-        // búa til dálka í Bókunarlista
+        // Configure the booking list table columns to display booking details
         hotelNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHotelName()));
         typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRoomType()));
         hotelLocationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLocation()));
         guestsColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getNumGuests()).asObject());
         priceColumnBooking.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getTotalPrice()).asObject());
 
-
+        // Set up date columns to display formatted dates
         checkInDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCheckInDate().toString()));
         checkOutDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCheckOutDate().toString()));
 
+        // Initially hide the hotel details container until a hotel is selected
         hotelDetailsContainer.setVisible(false);
         hotelTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -126,6 +132,7 @@ public class SearchController {
             }
         });
 
+        // Populate the room type combo box and set default values
         ObservableList<String> roomTypes = FXCollections.observableArrayList("Any", "Standard", "Deluxe", "Suite");
         roomTypeComboBox.setItems(roomTypes);
         roomTypeComboBox.setValue("Any");
@@ -133,6 +140,7 @@ public class SearchController {
         checkInDatePicker.setValue(LocalDate.now().plusDays(1));
         checkOutDatePicker.setValue(LocalDate.now().plusDays(2));
 
+        // Load initial data from the database
         loadHotelsFromDatabase("");
     }
 

@@ -201,11 +201,10 @@ public class DatabaseManager {
                             "  join hotel_rooms r on r.room_id=b.room_id" +
                             "  join hotels h on h.hotel_id=r.hotel_id" +
                             "  join users u on u.user_id=b.user_id" +
-                            " where r.hotel_id = ? and b.user_id = ?";
+                            " where b.user_id = ?";
 
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                pstmt.setInt(1, hotelId);
-                pstmt.setInt(2, userId);
+                pstmt.setInt(1, userId);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
                         bookings.add(new BookingInfo(

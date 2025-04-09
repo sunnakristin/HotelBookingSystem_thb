@@ -176,11 +176,12 @@ public class DatabaseManager {
 //    }
 
     // Method to save a booking
-    public static void saveBooking(int userId, int roomId, LocalDate checkInDate, LocalDate checkOutDate, int numGuests, double totalPrice) throws SQLException {
+    public static int saveBooking(int userId, int roomId, LocalDate checkInDate, LocalDate checkOutDate, int numGuests, double totalPrice) throws SQLException {
+        int bookingId = 0;
         try (Connection conn = getConnection()) {
             String insertQuery = "INSERT INTO bookings (room_id, user_id, check_in_date, check_out_date, num_guests, total_price, booking_status) " +
                     "VALUES (?, ?, ?, ?, ?, ?, 1)";
-            try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
+            try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) { //(insertQuery, Statement.RETURN_GENERATED_KEYS)
                 pstmt.setInt(1, roomId);
                 pstmt.setInt(2, userId);
                 pstmt.setDate(3, Date.valueOf(checkInDate));
@@ -188,8 +189,15 @@ public class DatabaseManager {
                 pstmt.setInt(5, numGuests);
                 pstmt.setDouble(6, totalPrice);
                 pstmt.executeUpdate();
+
+                try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        bookingId = rs.getInt(1); // Get generated booking ID
+                    }
+                }
             }
         }
+        return bookingId;
     }
 
     public static List<BookingInfo> LoadBookings(int hotelId, int userId) {

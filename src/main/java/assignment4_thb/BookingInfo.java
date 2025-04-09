@@ -45,7 +45,7 @@ public class BookingInfo {
     }
 
     public double getTotalPrice() {
-        totalPrice = (checkOutDate.getDayOfYear()-checkInDate.getDayOfYear())*totalPrice;
+        //totalPrice = (checkOutDate.getDayOfYear()-checkInDate.getDayOfYear())*totalPrice;
         return totalPrice;
     }
 

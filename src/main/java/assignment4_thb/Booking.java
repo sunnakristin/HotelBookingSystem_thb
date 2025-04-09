@@ -4,54 +4,60 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class Booking {
     private final HotelRoom room;
     private final Customer customer;
     private final Payment payment;
     private final Hotel hotel;
+    private final LocalDate checkInDate;
+    private final LocalDate checkOutDate;
 
 
-    public Booking(Customer customer, Hotel hotel, HotelRoom room){
+    public Booking(Customer customer, Hotel hotel, HotelRoom room, LocalDate checkInDate, LocalDate checkOutDate) {
         this.customer = customer;
         this.room = room;
         this.hotel = hotel;
         payment = new Payment(this);
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
     }
 
     public HotelRoom getRoom() {
         return room;
     }
 
-    public String confirmBooking(){
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {
-            String updateQuery = "UPDATE hotel_rooms SET availability = 0 WHERE room_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
-                pstmt.setInt(1, room.getRoomId());
-                pstmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            System.out.println("Error updating room availability: " + e.getMessage());
-        }
-        room.setAvailability(false);
+    public String confirmBooking() throws SQLException {
+//        try {
+//            DatabaseManager.confirmBooking(room.getRoomId());
+//        } catch (SQLException e) {
+//            System.out.println("Error booking room: " + e.getMessage());
+//            return "Failed to confirm booking due to an error.";
+//        }
+//
         customer.addBooking(this);
         payment.process();
+        DatabaseManager.saveBooking(this.customer.getUserId(), room.getRoomId(), checkInDate, checkOutDate, room.getMaxGuests(), room.getPrice());
         return sendConfirmation();
     }
-    public void cancel(){
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:hotel.db")) {
-            String updateQuery = "UPDATE hotel_rooms SET availability = 1 WHERE room_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
-                pstmt.setInt(1, room.getRoomId());
-                pstmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            System.out.println("Error updating room availability: " + e.getMessage());
-        }
-        room.setAvailability(true);
-        customer.removeBooking(this);
-        payment.refund();
-    }
+
+
+//    public void cancel() {
+////        try {
+////            DatabaseManager.cancelBooking(room.getRoomId());
+////        } catch (SQLException e) {
+////            System.out.println("Error canceling booking: " + e.getMessage());
+////        }
+////        //room.setAvailability(true);
+//
+//
+//
+//
+//        customer.removeBooking(this);
+//        payment.refund();
+//    }
+
     public String sendConfirmation(){
         return("An email confirmation has been sent to: " + customer.getEmail());
     }
@@ -62,5 +68,13 @@ public class Booking {
 
     public Hotel getHotel() {
         return hotel;
+    }
+
+    public LocalDate getCheckInDate() {
+        return checkInDate;
+    }
+
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
     }
 }
